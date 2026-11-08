@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="es">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex">
+<title>BARBER SHOP — Prueba del sillón 3D</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#101113;color:#ead8b5;font:14px Arial,sans-serif}a{color:inherit}button{font:inherit;cursor:pointer}header{position:absolute;z-index:3;inset:0 0 auto;padding:25px 5%;display:flex;align-items:center;justify-content:space-between;gap:20px}.logo{font:bold 22px Impact,'Arial Narrow',sans-serif;letter-spacing:1px;text-decoration:none}.badge{font-size:10px;letter-spacing:2px;color:#bcb7ab}main{position:relative;height:100svh;min-height:680px;overflow:hidden;background:radial-gradient(ellipse at 80% 50%,#5a422229,transparent 55%)}h1{position:absolute;inset:65px 0 auto;text-align:center;font:clamp(70px,14vw,205px)/1 Impact,'Arial Narrow',sans-serif;letter-spacing:-.02em;margin:0;background:linear-gradient(#f6dfab,#b28a4e);background-clip:text;color:transparent;pointer-events:none;z-index:1}#scene,#smoke{position:absolute;inset:0;width:100%;height:100%}#smoke{z-index:0;pointer-events:none}#scene{z-index:2;touch-action:pan-y}#scene canvas{display:block;touch-action:none;width:100%;height:100%}.bottom{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);z-index:4;text-align:center;width:min(95%,620px);pointer-events:none}.controls{display:flex;justify-content:center;gap:9px;flex-wrap:wrap;pointer-events:auto}button,.return{display:inline-block;border:1px solid #c9ab71;background:#c9ab71;color:#151512;padding:12px 19px;border-radius:25px;text-decoration:none;font-size:12px;font-weight:bold}.secondary{background:#141412de;color:#e9d4ad}.hint{font-size:11px;color:#c4beb2;margin:14px 0 0}.loading{position:absolute;z-index:5;top:48%;left:50%;transform:translate(-50%,-50%);max-width:85%;padding:22px 30px;border:1px solid #c9ab7144;background:#171713e8;color:#e5d5b7;text-align:center;line-height:1.6}.loading[hidden]{display:none}footer{padding:24px 5%;color:#aca89d;font-size:11px;line-height:1.7;border-top:1px solid #ffffff16}footer p{max-width:850px;margin:0 0 8px}button:focus-visible,a:focus-visible{outline:3px solid white;outline-offset:4px}@media(max-width:600px){header{padding:20px}.badge{font-size:8px;letter-spacing:1px}.logo{font-size:18px}h1{top:95px;font-size:19vw}main{min-height:650px}.bottom{bottom:25px}.hint{font-size:10px}button,.return{padding:11px 14px;font-size:11px}}
+</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}</script>
+<header><a class="logo" href="/">BARBER SHOP</a><span class="badge">PRUEBA VISUAL / 3D REAL</span></header>
+<main><canvas id="smoke" aria-hidden="true"></canvas><h1>BARBER SHOP</h1><div id="scene" role="img" aria-label="Sillón de barbería 3D negro. Arrastra para cambiar la vista."></div><div id="status" class="loading" role="status">Cargando el sillón y sus materiales…</div><div class="bottom"><div class="controls"><button id="motion" class="secondary" disabled>Pausar movimiento</button><button id="reset" class="secondary" disabled>Vista inicial</button><a class="return" href="/">Volver a la web</a></div><p class="hint">Arrastra para explorar · Sillón de OmTy · Iluminación y herramientas en prueba</p></div></main>
+<footer><p>Prueba independiente: la portada principal sigue intacta. Sillón “Barber Chair” de Tyron / OmTy, <a href="https://sketchfab.com/3d-models/barber-chair-6458816e73534df0a26ddc6567395d2c">modelo original</a> y <a href="https://www.fab.com/listings/800136ce-e601-49b4-87a1-ada6f8a3bc51">ficha en Fab</a>, licencia <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. Cambios: texturas reducidas a 1024 px, montaje de materiales y nueva iluminación.</p><p>Las herramientas son geometrías de prueba. Esta escena no es todavía la portada terminada ni un sistema de reservas.</p></footer>
+<script type="module">
+const status=document.querySelector('#status'),motion=document.querySelector('#motion'),reset=document.querySelector('#reset');
+const reduced=matchMedia('(prefers-reduced-motion: reduce)');
+let playing=!reduced.matches,sceneReady=false;
+let controls,renderer,scene,camera,chair,toolRig;const tools=[];
+const host=document.querySelector('#scene'),fogCanvas=document.querySelector('#smoke'),ctx=fogCanvas.getContext('2d');
+let fogWidth=1,fogHeight=1;
+function sizeSmoke(){fogWidth=Math.round(host.clientWidth/2);fogHeight=Math.round(host.clientHeight/2);fogCanvas.width=fogWidth;fogCanvas.height=fogHeight}
+sizeSmoke();let phase=0;
+function smoke(){ctx.clearRect(0,0,fogWidth,fogHeight);for(let i=0;i<13;i++){const x=fogWidth*(.5+Math.sin(i*2.31+phase*.17)*.48),y=fogHeight*(.48+Math.cos(i*1.7+phase*.1)*.21),r=fogWidth*(.16+Math.sin(i)*.025);const g=ctx.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,i%3===0?'rgba(184,143,83,.07)':'rgba(166,172,176,.055)');g.addColorStop(.4,'rgba(136,145,148,.025)');g.addColorStop(1,'rgba(136,145,148,0)');ctx.fillStyle=g;ctx.fillRect(x-r,y-r,r*2,r*2)}}
+smoke();
+function syncButton(){motion.textContent=playing?'Pausar movimiento':'Activar movimiento';motion.setAttribute('aria-pressed',String(!playing))}
+motion.onclick=()=>{playing=!playing;syncButton()};
+reduced.addEventListener('change',()=>{playing=!reduced.matches;syncButton()});
+let timeout=setTimeout(()=>{if(!sceneReady)status.textContent='La carga está tardando. Si no aparece el sillón, recarga la página y comprueba tu conexión.'},25000);
+try{
+ const THREE=await import('three');
+ const [{OBJLoader},{OrbitControls},{RoomEnvironment}]=await Promise.all([import('three/addons/loaders/OBJLoader.js'),import('three/addons/controls/OrbitControls.js'),import('three/addons/environments/RoomEnvironment.js')]);
+ renderer=new THREE.WebGLRenderer({alpha:true,antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,1.75));renderer.setSize(host.clientWidth,host.clientHeight);renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.2;renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;host.appendChild(renderer.domElement);
+ scene=new THREE.Scene();camera=new THREE.PerspectiveCamera(34,host.clientWidth/host.clientHeight,.01,50);
+ const pmrem=new THREE.PMREMGenerator(renderer),room=new RoomEnvironment();scene.environment=pmrem.fromScene(room,.05).texture;room.dispose();pmrem.dispose();
+ scene.add(new THREE.HemisphereLight(0xeef3ff,0x473117,1.5));
+ function light(color,intensity,x,y,z){const l=new THREE.DirectionalLight(color,intensity);l.position.set(x,y,z);scene.add(l);return l}
+ const key=light(0xf5f0df,3,-3,5,4);key.castShadow=true;key.shadow.mapSize.set(1024,1024);key.shadow.camera.left=-3;key.shadow.camera.right=3;key.shadow.camera.top=4;key.shadow.camera.bottom=-3;key.shadow.bias=-.001;light(0xe2af5f,3,3,3,-2);light(0x9fb4ca,1.2,-2,1,-3);
+ const response=await fetch('./chair-assets.json');if(!response.ok)throw Error('No se han podido cargar los archivos del sillón.');
+ const assets=await response.json(),loader=new THREE.TextureLoader();
+ async function texture(name,color=false){const t=await loader.loadAsync(assets.textures[name]);if(color)t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=Math.min(4,renderer.capabilities.getMaxAnisotropy());return t}
+ const mats={};await Promise.all(['Leather','Metal','Plastic'].map(async name=>{const [map,normalMap,roughnessMap,metalnessMap]=await Promise.all([texture(name+'_albedo',true),texture(name+'_normal'),texture(name+'_roughness'),texture(name+'_metallic')]);mats[name]=new THREE.MeshStandardMaterial({map,normalMap,roughnessMap,metalnessMap,metalness:1,roughness:1,envMapIntensity:name==='Metal'?1.5:.7,normalScale:new THREE.Vector2(.6,.6)});}));
+ const bytes=Uint8Array.from(atob(assets.obj),c=>c.charCodeAt(0));const stream=new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));const text=await new Response(stream).text();
+ chair=new OBJLoader().parse(text);chair.traverse(mesh=>{if(mesh.isMesh){const old=Array.isArray(mesh.material)?mesh.material[0]:mesh.material;mesh.material=mats[old.name]||mats.Metal;mesh.castShadow=true;mesh.receiveShadow=true;}});
+ const bounds=new THREE.Box3().setFromObject(chair),size=bounds.getSize(new THREE.Vector3()),center=bounds.getCenter(new THREE.Vector3());const scale=2.55/size.y;chair.scale.setScalar(scale);chair.position.set(-center.x*scale,-bounds.min.y*scale,-center.z*scale);
+ const chairPivot=new THREE.Group();chairPivot.add(chair);scene.add(chairPivot);
+ const ground=new THREE.Mesh(new THREE.PlaneGeometry(200,200),new THREE.ShadowMaterial({opacity:.48}));ground.rotation.x=-Math.PI/2;ground.position.y=-.005;ground.receiveShadow=true;scene.add(ground);
+ controls=new OrbitControls(camera,renderer.domElement);controls.enablePan=false;controls.enableZoom=false;controls.enableDamping=true;controls.minPolarAngle=.8;controls.maxPolarAngle=1.5;
+ function initial(){const mobile=host.clientWidth<650;camera.position.set(mobile?4.3:3.9,2.8,mobile?7.8:6.4);controls.target.set(0,1.35,0);controls.update();}
+ initial();reset.onclick=initial;
+ const silver=new THREE.MeshStandardMaterial({color:0xbec4c7,metalness:1,roughness:.24}),black=new THREE.MeshStandardMaterial({color:0x17191b,metalness:.22,roughness:.35}),wood=new THREE.MeshStandardMaterial({color:0x4c2e1d,roughness:.4,metalness:.08});
+ function mesh(geo,mat,parent,x=0,y=0,z=0){const m=new THREE.Mesh(geo,mat);m.position.set(x,y,z);parent.add(m);return m}
+ function box(p,x,y,z,w,h,d,mat){return mesh(new THREE.BoxGeometry(w,h,d),mat,p,x,y,z)}
+ function scissors(){const g=new THREE.Group();for(const sign of [-1,1]){const half=new THREE.Group();g.add(half);half.rotation.z=sign*.22;mesh(new THREE.TorusGeometry(.105,.018,10,40),silver,half,sign*.045,-.25,0);box(half,0,-.08,0,.025,.19,.025,silver);const shape=new THREE.Shape();shape.moveTo(-.03,0);shape.lineTo(.03,0);shape.lineTo(.018,.38);shape.lineTo(-.018,.48);shape.closePath();mesh(new THREE.ExtrudeGeometry(shape,{depth:.012,bevelEnabled:false}),silver,half,0,0,sign*.012)}mesh(new THREE.SphereGeometry(.035,16,8),silver,g);return g}
+ function clipper(){const g=new THREE.Group();box(g,0,0,0,.19,.47,.11,black);box(g,0,.12,.06,.15,.18,.015,silver);box(g,0,.27,0,.24,.08,.12,silver);for(let i=0;i<12;i++)box(g,-.11+i*.02,.325,.015,.009,.06,.08,silver);mesh(new THREE.SphereGeometry(.025,16,8),silver,g,0,-.05,.067);return g}
+ function razor(){const g=new THREE.Group();const handle=box(g,0,-.18,0,.07,.5,.045,wood);handle.rotation.z=-.28;const blade=box(g,.10,.17,0,.10,.44,.012,silver);blade.rotation.z=-.48;mesh(new THREE.SphereGeometry(.027,16,8),silver,g,0,0,0);return g}
+ toolRig=new THREE.Group();scene.add(toolRig);
+ for(const [object,x,y,z,rz] of [[scissors(),-1.65,2,.0,-.65],[clipper(),1.65,1.75,-.2,.3],[razor(),1.5,.7,.2,-.4]]){object.position.set(x,y,z);object.rotation.z=rz;toolRig.add(object);tools.push({object,y,rz})}
+ sceneReady=true;clearTimeout(timeout);status.hidden=true;motion.disabled=false;reset.disabled=false;syncButton();
+ let last=performance.now(),motionTime=0;
+ function frame(now){requestAnimationFrame(frame);const dt=Math.min((now-last)/1000,.05);last=now;if(document.hidden)return;if(playing){motionTime+=dt;phase+=dt*.4;chairPivot.rotation.y+=dt*.11;tools.forEach(({object,y,rz},i)=>{object.position.y=y+Math.sin(motionTime*.7+i*2)*.08;object.rotation.y=Math.sin(motionTime*.35+i)*.35;object.rotation.z=rz+Math.sin(motionTime*.5+i)*.08});smoke()}controls.update();renderer.render(scene,camera)}requestAnimationFrame(frame);
+ const observer=new ResizeObserver(()=>{renderer.setSize(host.clientWidth,host.clientHeight);camera.aspect=host.clientWidth/host.clientHeight;camera.updateProjectionMatrix();sizeSmoke();smoke()});observer.observe(host);
+ renderer.domElement.addEventListener('webglcontextlost',e=>{e.preventDefault();playing=false;status.hidden=false;status.textContent='Se ha perdido la conexión gráfica. Recarga la página para volver a cargar el sillón.'});
+}catch(error){clearTimeout(timeout);status.hidden=false;status.textContent='No se ha podido iniciar la prueba 3D. Necesita WebGL 2 y acceso a la biblioteca Three.js. '+error.message;console.error(error)}
+</script>
+</html>
