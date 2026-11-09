@@ -4,7 +4,18 @@
 <title>BARBER SHOP — Portada 3D · base validada</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-<link rel="preload" href="./chair-optimized-assets.json" as="fetch" crossorigin fetchpriority="high">
+<script>
+const chairAssetUrl = new URL('./chair-optimized-assets.json',location.href);
+const comparisonRun = new URLSearchParams(location.search).get('comparacion');
+if (comparisonRun) chairAssetUrl.searchParams.set('comparacion',comparisonRun);
+const chairPreload = document.createElement('link');
+chairPreload.rel = 'preload';
+chairPreload.as = 'fetch';
+chairPreload.crossOrigin = 'anonymous';
+chairPreload.fetchPriority = 'high';
+chairPreload.href = chairAssetUrl.href;
+document.head.append(chairPreload);
+</script>
 <style>
 *{box-sizing:border-box}body{margin:0;background:#0a0b0d;color:#eedabd;font:14px Arial,sans-serif}a{color:inherit}button{font:inherit;cursor:pointer}header{position:absolute;z-index:5;inset:0 0 auto;padding:23px 5.2%;display:flex;align-items:center;justify-content:space-between;gap:20px}.logo{font:600 27px/1 'Barlow Condensed','Arial Narrow',sans-serif;letter-spacing:.085em;text-decoration:none;color:#eed2a2;white-space:nowrap}nav{display:flex;gap:35px;font-size:12px;color:#e8e0d4}nav a{text-decoration:none}nav a:hover{color:#e0b773}.eyebrow{position:absolute;top:81px;left:0;right:0;text-align:center;color:#ac9575;font-size:9px;letter-spacing:.33em;z-index:1}main{position:relative;height:100svh;min-height:720px;overflow:hidden;background:radial-gradient(ellipse at 87% 47%,#91612724,transparent 50%),radial-gradient(ellipse at 28% 51%,#46505c16,transparent 50%)}main:after{content:'';position:absolute;inset:60% 0 0;pointer-events:none;background:radial-gradient(ellipse at 52% 63%,#b9894530,transparent 38%),linear-gradient(transparent,#07080acc);z-index:0}h1{position:absolute;inset:104px 0 auto;text-align:center;font:800 clamp(85px,16.6vw,250px)/.78 'Barlow Condensed',Impact,'Arial Narrow',sans-serif;letter-spacing:-.018em;margin:0;background:linear-gradient(115deg,#a97a42 5%,#efcf95 34%,#f7dbab 50%,#c89b5e 78%,#e3bf87 100%);background-clip:text;color:transparent;pointer-events:none;z-index:1;filter:drop-shadow(0 5px 18px #0005)}#scene,#smoke{position:absolute;inset:0;width:100%;height:100%}#smoke{z-index:0;pointer-events:none;opacity:.85}#scene{z-index:2;touch-action:pan-y}#scene canvas{display:block;touch-action:none;width:100%;height:100%}.bottom{position:absolute;bottom:25px;left:50%;transform:translateX(-50%);z-index:4;text-align:center;width:min(95%,640px);pointer-events:none}.cta{display:inline-flex;align-items:center;justify-content:center;min-width:245px;min-height:54px;padding:12px 35px;border-radius:40px;background:linear-gradient(110deg,#c49758,#f3d19a 50%,#c99a59);color:#231a11;text-decoration:none;font:700 23px 'Barlow Condensed',Impact,sans-serif;letter-spacing:.065em;box-shadow:0 0 35px #d3a36020,inset 0 1px 0 #ffefc7;pointer-events:auto;border:1px solid #eac78c}.tagline{font:italic 14px Georgia,serif;color:#e5dbcd;margin:12px 0 14px}.controls{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;pointer-events:auto}.controls button{border:0;background:transparent;color:#a6a095;padding:4px 8px;font-size:10px;letter-spacing:.025em}.controls button:hover{color:#f4ddb8}.controls button:disabled{opacity:.4;cursor:wait}.loading{position:absolute;z-index:5;top:48%;left:50%;transform:translate(-50%,-50%);max-width:85%;padding:22px 30px;border:1px solid #c9ab7144;background:#171713e8;color:#e5d5b7;text-align:center;line-height:1.6}.loading[hidden]{display:none}footer{padding:25px 5%;color:#9e978b;font-size:11px;line-height:1.7;border-top:1px solid #ffffff16}footer p{max-width:900px;margin:0 0 8px}button:focus-visible,a:focus-visible{outline:2px solid #f0d2a1;outline-offset:5px}.caption{position:absolute;z-index:3;right:4%;top:53%;writing-mode:vertical-rl;color:#a89c875f;font-size:9px;letter-spacing:.24em;pointer-events:none}.preview-label{color:#cba76b}
 @media(max-width:650px){header{padding:23px 20px}.logo{font-size:23px}nav{gap:18px;font-size:11px}.eyebrow{top:92px;font-size:8px;letter-spacing:.2em}h1{top:122px;font-size:20.4vw}main{min-height:720px}.bottom{bottom:23px}.cta{min-height:48px;min-width:215px;font-size:21px}.tagline{font-size:13px;margin:10px 0}.caption{display:none}.controls{gap:5px}.controls button{font-size:9px}}
@@ -223,7 +234,7 @@ function showTimings(error) {
  const navigation = performance.getEntriesByType('navigation')[0];
  const documentTime = navigation ? 'Respuesta del HTML · primer byte a ' + format(navigation.responseStart)
   + ' · último byte a ' + format(navigation.responseEnd) : '';
- const modelUrl = new URL('./chair-optimized-assets.json',location.href).href;
+ const modelUrl = chairAssetUrl.href;
  const model = performance.getEntriesByName(modelUrl,'resource').at(-1);
  const transfer = model?.transferSize
   ? 'Archivo 3D transferido · ' + Math.round(model.transferSize / 1024) + ' KiB'
@@ -289,7 +300,7 @@ function createChair(THREE, meshes, buffer, materials) {
 
 try{
  const download = timeAsync('Descarga y lectura del archivo 3D',async () => {
-  const response = await fetch('./chair-optimized-assets.json');
+  const response = await fetch(chairAssetUrl.href);
   if (!response.ok) throw Error('No se han podido cargar los archivos del sillón.');
   return response.json();
  });
