@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex">
+<title>BARBER SHOP · Sillón Premium · Prototipo aislado</title>
+<style>
+*{box-sizing:border-box}html,body{height:100%;margin:0}body{background:#11100f;color:#e9dbca;font:14px/1.5 system-ui,Arial,sans-serif;overflow:hidden}
+#stage{position:fixed;inset:0;background:radial-gradient(ellipse at 50% 38%,#524234 0%,#28231f 38%,#11100f 75%)}
+#stage canvas{display:block;width:100%;height:100%}
+header{position:absolute;z-index:2;left:4%;top:24px;pointer-events:none}h1{font:bold clamp(19px,3vw,34px)/1.12 Georgia,serif;margin:0;color:#f1ddbd}header p{font-size:11px;letter-spacing:2.2px;color:#c0a77d;margin:10px 0}
+.panel{position:absolute;z-index:3;bottom:20px;left:50%;transform:translateX(-50%);width:min(94%,690px);border:1px solid #b6986150;background:#151411e8;backdrop-filter:blur(15px);padding:15px 20px;border-radius:16px;box-shadow:0 15px 50px #0006;text-align:center}
+.buttons{display:flex;flex-wrap:wrap;gap:9px;justify-content:center}.buttons button{background:#24211d;color:#eee1ca;border:1px solid #705f48;border-radius:9px;padding:10px 14px;cursor:pointer}.buttons button:hover{background:#51402f}.buttons button.primary{background:#d2ab72;color:#1d160f;font-weight:700;border-color:#e2c08c}.buttons button[aria-pressed=true]{outline:2px solid #d2ab72}#message{margin:11px 0 0;font-size:12px;color:#bfb2a2}#status{position:absolute;z-index:4;top:50%;left:50%;transform:translate(-50%,-50%);padding:16px 20px;background:#17130f;border:1px solid #856d48;border-radius:9px}#status[hidden]{display:none}
+.corner{position:absolute;right:3%;top:30px;font-size:11px;color:#c1a985;letter-spacing:2px;text-align:right;pointer-events:none}
+@media(max-width:650px){header{top:18px;left:20px}.corner{top:84px;right:20px}.panel{bottom:12px;padding:13px 9px}.buttons button{padding:9px 11px;font-size:12px}#message{font-size:10px}}
+</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}</script>
+</head><body><div id="stage"></div><header><h1>El sillón definitivo</h1><p>BARBER SHOP · ESTUDIO DE MODELO 3D</p></header><div class="corner">PROTOTIPO AISLADO<br>BASE FIJA · ASIENTO GIRATORIO</div><div id="status">Preparando sillón 3D…</div>
+<div class="panel"><div class="buttons"><button id="turn" class="primary" aria-pressed="true">Pausar giro</button><button id="front">Vista frontal</button><button id="side">Vista lateral</button><button id="home">Vista 3/4</button><button id="base">Resaltar base fija</button></div><div id="message">Arrastra para inspeccionar la silla · La base debe permanecer totalmente inmóvil.</div></div>
+<script type="module">
+const status=document.getElementById('status'),host=document.getElementById('stage'),msg=document.getElementById('message');
+try{
+const THREE=await import('three');
+const [{RoundedBoxGeometry},{OrbitControls},{RoomEnvironment}]=await Promise.all([import('three/addons/geometries/RoundedBoxGeometry.js'),import('three/addons/controls/OrbitControls.js'),import('three/addons/environments/RoomEnvironment.js')]);
+const scene=new THREE.Scene();
+const camera=new THREE.PerspectiveCamera(34,innerWidth/innerHeight,.08,80);
+const renderer=new THREE.WebGLRenderer({antialias:true,alpha:true,powerPreference:'high-performance'});
+renderer.setSize(innerWidth,innerHeight);renderer.setPixelRatio(Math.min(devicePixelRatio,1.8));renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.22;renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;host.appendChild(renderer.domElement);
+const pmrem=new THREE.PMREMGenerator(renderer),room=new RoomEnvironment();scene.environment=pmrem.fromScene(room,.06).texture;room.dispose();pmrem.dispose();
+scene.add(new THREE.HemisphereLight(0xd5dcf0,0x402714,1.2));
+const area=(color,intensity,x,y,z)=>{const l=new THREE.DirectionalLight(color,intensity);l.position.set(x,y,z);scene.add(l);return l};
+const key=area(0xffe4bc,4,-3,6,5);key.castShadow=true;key.shadow.mapSize.set(2048,2048);key.shadow.camera.left=-4;key.shadow.camera.right=4;key.shadow.camera.top=5;key.shadow.camera.bottom=-4;key.shadow.bias=-.0005;
+area(0xe5a55c,3,4,3,-4);area(0xaabbd2,1.45,-5,2,-3);
+const texCanvas=document.createElement('canvas');texCanvas.width=texCanvas.height=512;const cx=texCanvas.getContext('2d');
+cx.fillStyle='#b2b0aa';cx.fillRect(0,0,512,512);
+let seed=42;const rand=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296};
+for(let i=0;i<38000;i++){let x=rand()*512,y=rand()*512,r=rand()*1.8+.15;cx.fillStyle=rand()>.5?'#dad8d1':'#77746e';cx.globalAlpha=.06+rand()*.16;cx.fillRect(x,y,r,r)}cx.globalAlpha=1;
+const leatherTexture=new THREE.CanvasTexture(texCanvas);leatherTexture.wrapS=leatherTexture.wrapT=THREE.RepeatWrapping;leatherTexture.repeat.set(2.4,2.4);
+const leather=new THREE.MeshPhysicalMaterial({color:0x242322,roughness:.65,metalness:0,clearcoat:.12,clearcoatRoughness:.8,bumpMap:leatherTexture,bumpScale:.012,envMapIntensity:.8});
+const leatherSide=new THREE.MeshPhysicalMaterial({color:0x151516,roughness:.69,clearcoat:.12});
+const bronze=new THREE.MeshPhysicalMaterial({color:0xc6a274,metalness:1,roughness:.2,envMapIntensity:1.65,clearcoat:.25});
+const champagne=new THREE.MeshPhysicalMaterial({color:0xe0c29a,metalness:1,roughness:.18,envMapIntensity:1.7});
+const steel=new THREE.MeshPhysicalMaterial({color:0xb3a28e,metalness:1,roughness:.22,envMapIntensity:1.65});
+const darkSteel=new THREE.MeshStandardMaterial({color:0x1c1b19,metalness:.9,roughness:.3});
+const thread=new THREE.MeshStandardMaterial({color:0x655c50,roughness:.9});
+const matFloor=new THREE.MeshStandardMaterial({color:0x151311,roughness:.27,metalness:.32,envMapIntensity:.65});
+const fixed=new THREE.Group();fixed.name='BASE_COMPLETAMENTE_FIJA';scene.add(fixed);
+const swivel=new THREE.Group();swivel.name='ASIENTO_GIRATORIO';scene.add(swivel);
+const part=(p,g,m,x=0,y=0,z=0)=>{const a=new THREE.Mesh(g,m);a.position.set(x,y,z);a.castShadow=true;a.receiveShadow=true;p.add(a);return a};
+function box(p,w,h,d,r,m,x,y,z){return part(p,new RoundedBoxGeometry(w,h,d,5,Math.min(r,w*.48,h*.48,d*.48)),m,x,y,z)}
+function cyl(p,r1,r2,h,m,x,y,z,n=72){return part(p,new THREE.CylinderGeometry(r1,r2,h,n),m,x,y,z)}
+function tube(p,pts,r,m){const curve=new THREE.CatmullRomCurve3(pts.map(q=>new THREE.Vector3(...q)));return part(p,new THREE.TubeGeometry(curve,60,r,10,false),m)}
+function rail(p,points,r,m){return tube(p,points,r,m)}
+// Heavy beveled base and hydraulic column remain in the world coordinate system.
+const footProfile=[[0,0],[.49,0],[.58,.011],[.61,.025],[.61,.048],[.59,.058],[.54,.069],[.43,.085],[.24,.12],[.16,.145],[0,.145]];
+part(fixed,new THREE.LatheGeometry(footProfile.map(q=>new THREE.Vector2(...q)),128),steel);
+const rim=part(fixed,new THREE.TorusGeometry(.59,.017,16,128),darkSteel,0,.032,0);rim.rotation.x=Math.PI/2;
+cyl(fixed,.16,.19,.36,steel,0,.327,0);
+cyl(fixed,.12,.12,.18,champagne,0,.56,0);
+cyl(fixed,.14,.14,.055,darkSteel,0,.666,0);
+const seamHeight=.714;
+// Pivot bearing belongs to the rotating assembly.
+cyl(swivel,.205,.17,.07,bronze,0,.707,0);
+cyl(swivel,.26,.19,.054,darkSteel,0,.752,0);
+rail(swivel,[[.17,.733,0],[.42,.722,.02],[.62,.703,.02]],.018,bronze);
+box(swivel,.12,.043,.06,.015,darkSteel,.63,.706,.02);
+// The upholstered seat: separate under-shell, rolled cushions, front bolster and piping.
+box(swivel,1.40,.16,1.17,.055,darkSteel,0,.827,.07);
+box(swivel,1.46,.34,1.16,.15,leatherSide,0,1.015,.08);
+box(swivel,1.39,.30,1.11,.145,leather,0,1.075,.09);
+box(swivel,1.43,.21,.28,.095,leather,0,.99,.557);
+for(const x of [-.56,.56])tube(swivel,[[x,1.04,.619],[x,1.10,.57],[x,1.20,.41]],.004,thread);
+tube(swivel,[[-.50,1.195,.56],[-.25,1.206,.57],[0,1.208,.575],[.25,1.206,.57],[.5,1.195,.56]],.003,thread);
+// Reclined, broadly rounded, contour-padded backrest.
+const back=new THREE.Group();back.position.set(0,1.775,-.435);back.rotation.x=-.205;swivel.add(back);
+box(back,1.35,1.23,.26,.12,darkSteel,0,0,-.045);
+box(back,1.31,1.19,.26,.125,leatherSide,0,0,0);
+box(back,1.22,1.10,.24,.13,leather,0,-.008,.065);
+box(back,1.04,.42,.06,.035,leather,0,-.22,.197);
+for(const x of [-.44,.44])tube(back,[[x,-.49,.191],[x,-.25,.195],[x,.04,.19],[x,.34,.155],[x,.51,.115]],.004,thread);
+tube(back,[[-.45,.085,.18],[-.22,.11,.192],[0,.115,.195],[.22,.11,.192],[.45,.085,.18]],.0038,thread);
+// Cylindrical headrest with real rounded circular end caps (not a box).
+for(const x of [-.205,.205])rail(swivel,[[x,2.26,-.58],[x,2.48,-.63]],.026,steel);
+const head=new THREE.Group();head.position.set(0,2.60,-.64);head.rotation.x=-.09;swivel.add(head);
+const headCylinder=cyl(head,.183,.183,.80,leather,0,0,0,64);headCylinder.rotation.z=Math.PI/2;
+for(const x of [-.40,.40]){const cap=cyl(head,.167,.167,.009,leatherSide,x,0,0,64);cap.rotation.z=Math.PI/2;const bolt=cyl(head,.047,.047,.012,bronze,x+(x>0?.012:-.012),0,0,48);bolt.rotation.z=Math.PI/2}
+const headSeam=part(head,new THREE.TorusGeometry(.178,.004,8,64),thread,.31,0,0);headSeam.rotation.y=Math.PI/2;
+// Forged curved metal arm frames with substantial leather rolls.
+for(const side of [-1,1]){
+ const x=side*.785;
+ rail(swivel,[[x*.92,.82,-.38],[x,1.04,-.40],[x,1.39,-.34],[x,1.445,-.27]],.043,bronze);
+ rail(swivel,[[x*.92,.83,.43],[x,1.01,.49],[x,1.39,.47],[x,1.44,.43]],.039,steel);
+ box(swivel,.21,.09,1.00,.04,champagne,x,1.46,.08);
+ box(swivel,.205,.135,.97,.06,leather,x,1.53,.075);
+ box(swivel,.10,.16,.89,.03,bronze,x,.905,.035);
+ const fast=cyl(swivel,.028,.028,.013,champagne,x+side*.05,.99,-.36);fast.rotation.z=Math.PI/2;
+}
+// Forward projecting angled footrest (all rotates WITH the seat).
+for(const side of [-1,1])rail(swivel,[[side*.40,.83,.48],[side*.36,.32,1.03],[side*.40,.22,1.21]],.036,steel);
+const leg=new THREE.Group();leg.position.set(0,.56,.815);leg.rotation.x=-.55;swivel.add(leg);
+box(leg,.94,.58,.14,.045,darkSteel,0,0,0);
+box(leg,.90,.55,.15,.06,leather,0,0,.035);
+const step=new THREE.Group();step.position.set(0,.225,1.29);swivel.add(step);
+box(step,1.12,.115,.42,.04,champagne,0,0,0);
+box(step,1.015,.035,.35,.015,darkSteel,0,.073,-.005);
+for(let i=0;i<10;i++)box(step,.96,.006,.009,.003,steel,0,.094,-.15+i*.033);
+// Floor and accurate contact shadow.
+const floor=part(scene,new THREE.PlaneGeometry(200,200),matFloor,0,-.008,0);floor.rotation.x=-Math.PI/2;floor.castShadow=false;floor.receiveShadow=true;
+const c=document.createElement('canvas');c.width=c.height=256;const context=c.getContext('2d'),gr=context.createRadialGradient(128,128,6,128,128,125);gr.addColorStop(0,'#000b');gr.addColorStop(.6,'#0007');gr.addColorStop(1,'#0000');context.fillStyle=gr;context.fillRect(0,0,256,256);
+const shadow=part(scene,new THREE.PlaneGeometry(2.2,2.2),new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(c),transparent:true,opacity:.6,depthWrite:false}),0,.004,0);shadow.rotation.x=-Math.PI/2;shadow.castShadow=false;
+const controls=new OrbitControls(camera,renderer.domElement);controls.enablePan=false;controls.minDistance=4.15;controls.maxDistance=10;controls.maxPolarAngle=Math.PI*.51;controls.minPolarAngle=.55;controls.enableDamping=true;controls.dampingFactor=.06;controls.target.set(0,1.42,0);
+function view(x,y,z){camera.position.set(x,y,z);controls.update()}
+function initial(){const mobile=innerWidth<640;view(mobile?3.25:3.15,2.55,mobile?8.7:6.7)}
+initial();
+document.getElementById('front').onclick=()=>view(0,2.45,6.8);
+document.getElementById('side').onclick=()=>view(7,2.5,0);
+document.getElementById('home').onclick=initial;
+let moving=!matchMedia('(prefers-reduced-motion:reduce)').matches,highlight=false;
+const turn=document.getElementById('turn');function sync(){turn.textContent=moving?'Pausar giro':'Activar giro';turn.setAttribute('aria-pressed',String(moving))}
+turn.onclick=()=>{moving=!moving;sync()};sync();
+document.getElementById('base').onclick=()=>{highlight=!highlight;fixed.traverse(o=>{if(o.isMesh&&o.material!==darkSteel){if(!o.userData.original)o.userData.original=o.material;o.material=highlight?new THREE.MeshStandardMaterial({color:0x42b0b2,metalness:.6,roughness:.3}):o.userData.original}});msg.textContent=highlight?'La parte turquesa permanece fija: solo gira el asiento superior.':'Arrastra para inspeccionar la silla · La base debe permanecer totalmente inmóvil.'};
+let t=0,last=performance.now();
+function animate(now){requestAnimationFrame(animate);const dt=Math.min(.06,(now-last)/1000);last=now;if(document.hidden)return;if(moving){t+=dt;swivel.rotation.y=Math.sin(t*.38)*.55;}controls.update();renderer.render(scene,camera)}
+requestAnimationFrame(animate);
+addEventListener('resize',()=>{renderer.setSize(innerWidth,innerHeight);camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix()});
+status.hidden=true;
+}catch(e){status.textContent='No se ha podido cargar el modelo 3D: '+e.message;console.error(e)}
+</script></body></html>
