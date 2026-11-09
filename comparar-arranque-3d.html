@@ -22,7 +22,7 @@ iframe{position:fixed;inset:0;border:0;width:100%;height:100%;pointer-events:non
 <div id="preview"></div>
 <main>
 <h1>Comparación de carga del sillón 3D</h1>
-<p>En Edge o Chrome, pulsa <strong>F12</strong>, entra en <strong>Red</strong> y marca <strong>Deshabilitar caché</strong>. Deja ese panel abierto y mantén esta pestaña visible durante la prueba.</p>
+<p>Mantén esta pestaña visible. Cada apertura descargará de nuevo el archivo del sillón. Los recursos compartidos, como Three.js y el pedestal, pueden reutilizarse desde la caché.</p>
 <p>Se harán ocho aperturas, cuatro por versión, alternando cuál se carga primero.</p>
 <button id="start" type="button">Iniciar comparación</button>
 <button id="copy" type="button" hidden>Copiar resultados</button>
@@ -52,7 +52,10 @@ async function measure(version) {
  const frame = document.createElement('iframe');
  frame.title = 'Portada ' + version.name;
  const url = new URL(version.path,location.href);
- url.searchParams.set('comparacion',crypto.randomUUID());
+ const run = crypto.randomUUID();
+ url.searchParams.set('comparacion',run);
+ const assetUrl = new URL(version.asset,url);
+ assetUrl.searchParams.set('comparacion',run);
  frame.src = url.href;
  preview.append(frame);
  const deadline = performance.now() + 20000;
@@ -63,11 +66,15 @@ async function measure(version) {
    const perf = child.performance;
    const render = perf.getEntriesByName('chair-first-render','mark').at(-1);
    if (render && child.location.href === url.href) {
-    const asset = perf.getEntriesByName(new URL(version.asset,url).href,'resource').at(-1);
+    const asset = perf.getEntriesByName(assetUrl.href,'resource').at(-1);
+    if (!asset?.encodedBodySize || asset.transferSize < asset.encodedBodySize) {
+     throw Error('No se pudo verificar una descarga completa del modelo en esta apertura. Inicia de nuevo la comparación.');
+    }
     const navigation = perf.getEntriesByType('navigation')[0];
     return {
      ms:Math.round(render.startTime),
-     kib:asset ? Math.round(asset.transferSize/1024) : null,
+     kib:Math.round(asset.transferSize/1024),
+     network:Math.round(asset.responseEnd-asset.startTime),
      ttfb:navigation ? Math.round(navigation.responseStart) : null
     };
    }
@@ -80,16 +87,13 @@ async function measure(version) {
 }
 
 function formatResults(results) {
- const lines = results.map(({key,ms,kib,ttfb},i) =>
-  `${i+1}. ${key} · ${ms} ms · 3D ${kib ?? 'sin dato'} KiB · HTML primer byte ${ttfb ?? 'sin dato'} ms`);
+ const lines = results.map(({key,ms,kib,network,ttfb},i) =>
+  `${i+1}. ${key} · ${ms} ms · 3D ${kib} KiB en ${network} ms · HTML primer byte ${ttfb ?? 'sin dato'} ms`);
  const summary = ['A','B'].flatMap(key => {
   const times = results.filter(row => row.key === key).map(row => row.ms);
   return times.length ? [`${key} · ${versions[key].name} · mediana ${Math.round(median(times))} ms · ${times.length} aperturas`] : [];
  });
- const cacheNote = results.some(row => row.kib === null || row.kib < 2)
-  ? ['Alguna apertura no registró una descarga completa del modelo. Repite con la caché desactivada.']
-  : [];
- return [...summary,'',...lines,...cacheNote].join('\n');
+ return [...summary,'',...lines].join('\n');
 }
 
 start.onclick = async () => {
