@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Comparación de carga · BARBER SHOP</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#0c0b0a;color:#f7e5c4;font:15px/1.55 system-ui,sans-serif}
+main{position:relative;width:min(560px,calc(100% - 24px));margin:12px auto;padding:18px 22px;background:#1a1612;border:1px solid #b89258;border-radius:12px}
+h1{font-size:1.3rem;margin:0 0 6px}
+p{margin:8px 0}
+button{font:inherit;font-weight:650;color:#251a0e;background:#e4ba7a;border:0;border-radius:6px;padding:8px 14px;cursor:pointer}
+button:disabled{opacity:.55;cursor:default}
+button+button{margin-left:8px}
+pre{white-space:pre-wrap;overflow:auto;font-size:12px;margin:10px 0}
+iframe{position:fixed;inset:0;border:0;width:100%;height:100%;pointer-events:none}
+</style>
+</head>
+<body>
+<div id="preview"></div>
+<main>
+<h1>Comparación de carga del sillón 3D</h1>
+<p>En Edge o Chrome, pulsa <strong>F12</strong>, entra en <strong>Red</strong> y marca <strong>Deshabilitar caché</strong>. Deja ese panel abierto y mantén esta pestaña visible durante la prueba.</p>
+<p>Se harán ocho aperturas, cuatro por versión, alternando cuál se carga primero.</p>
+<button id="start" type="button">Iniciar comparación</button>
+<button id="copy" type="button" hidden>Copiar resultados</button>
+<p id="status" role="status"></p>
+<pre id="report" hidden></pre>
+</main>
+<script type="module">
+const versions = {
+ A:{name:'Anterior',path:'portada-3d-optimizada.html',asset:'chair-optimized-assets.json'},
+ B:{name:'Compacta',path:'portada-3d-primera-visita.html',asset:'chair-compact-assets.json'}
+};
+const order = ['A','B','B','A','A','B','B','A'];
+const preview = document.querySelector('#preview');
+const start = document.querySelector('#start');
+const copy = document.querySelector('#copy');
+const status = document.querySelector('#status');
+const report = document.querySelector('#report');
+const pause = ms => new Promise(resolve => setTimeout(resolve,ms));
+
+function median(numbers) {
+ const sorted = [...numbers].sort((a,b) => a-b);
+ const center = Math.floor(sorted.length/2);
+ return sorted.length % 2 ? sorted[center] : (sorted[center-1]+sorted[center])/2;
+}
+
+async function measure(version) {
+ const frame = document.createElement('iframe');
+ frame.title = 'Portada ' + version.name;
+ const url = new URL(version.path,location.href);
+ url.searchParams.set('comparacion',crypto.randomUUID());
+ frame.src = url.href;
+ preview.append(frame);
+ const deadline = performance.now() + 20000;
+ try {
+  while (performance.now() < deadline) {
+   if (document.hidden) throw Error('La pestaña dejó de estar visible. Inicia de nuevo la comparación.');
+   const child = frame.contentWindow;
+   const perf = child.performance;
+   const render = perf.getEntriesByName('chair-first-render','mark').at(-1);
+   if (render && child.location.href === url.href) {
+    const asset = perf.getEntriesByName(new URL(version.asset,url).href,'resource').at(-1);
+    const navigation = perf.getEntriesByType('navigation')[0];
+    return {
+     ms:Math.round(render.startTime),
+     kib:asset ? Math.round(asset.transferSize/1024) : null,
+     ttfb:navigation ? Math.round(navigation.responseStart) : null
+    };
+   }
+   await pause(60);
+  }
+  throw Error('El sillón no apareció dentro de 20 segundos. Abre la portada por separado y comprueba si carga en esta sesión.');
+ } finally {
+  frame.remove();
+ }
+}
+
+function formatResults(results) {
+ const lines = results.map(({key,ms,kib,ttfb},i) =>
+  `${i+1}. ${key} · ${ms} ms · 3D ${kib ?? 'sin dato'} KiB · HTML primer byte ${ttfb ?? 'sin dato'} ms`);
+ const summary = ['A','B'].flatMap(key => {
+  const times = results.filter(row => row.key === key).map(row => row.ms);
+  return times.length ? [`${key} · ${versions[key].name} · mediana ${Math.round(median(times))} ms · ${times.length} aperturas`] : [];
+ });
+ const cacheNote = results.some(row => row.kib === null || row.kib < 2)
+  ? ['Alguna apertura no registró una descarga completa del modelo. Repite con la caché desactivada.']
+  : [];
+ return [...summary,'',...lines,...cacheNote].join('\n');
+}
+
+start.onclick = async () => {
+ start.disabled = true;
+ copy.hidden = true;
+ copy.textContent = 'Copiar resultados';
+ report.hidden = true;
+ const results = [];
+ try {
+  for (const [i,key] of order.entries()) {
+   status.textContent = `Apertura ${i+1} de ${order.length} · ${versions[key].name}`;
+   results.push({key,...await measure(versions[key])});
+   if (i < order.length-1) await pause(500);
+  }
+  status.textContent = 'Comparación completada.';
+ } catch (error) {
+  status.textContent = error.name === 'SecurityError'
+   ? 'Vercel pidió autenticación dentro de la prueba. Abre el enlace con tu sesión de Vercel y vuelve a iniciar.'
+   : error.message;
+ } finally {
+  if (results.length) {
+   report.textContent = formatResults(results);
+   report.hidden = false;
+   copy.hidden = false;
+  }
+  start.disabled = false;
+ }
+};
+copy.onclick = async () => {
+ try {
+  await navigator.clipboard.writeText(report.textContent);
+  copy.textContent = 'Copiado';
+ } catch {
+  copy.textContent = 'Selecciona el texto para copiarlo';
+ }
+};
+</script>
+</body>
+</html>
