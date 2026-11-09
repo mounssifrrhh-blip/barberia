@@ -2,7 +2,18 @@
 <html lang="es">
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex">
 <title>BARBER SHOP — Portada 3D · base validada</title>
-<link rel="preload" href="./chair-compact-assets.json" as="fetch" crossorigin fetchpriority="high">
+<script>
+const chairAssetUrl = new URL('./chair-compact-assets.json',location.href);
+const comparisonRun = new URLSearchParams(location.search).get('comparacion');
+if (comparisonRun) chairAssetUrl.searchParams.set('comparacion',comparisonRun);
+const chairPreload = document.createElement('link');
+chairPreload.rel = 'preload';
+chairPreload.as = 'fetch';
+chairPreload.crossOrigin = 'anonymous';
+chairPreload.fetchPriority = 'high';
+chairPreload.href = chairAssetUrl.href;
+document.head.append(chairPreload);
+</script>
 <link rel="preload" href="./base-validada.svg" as="image" fetchpriority="high">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
@@ -224,7 +235,7 @@ function showTimings(error) {
  const navigation = performance.getEntriesByType('navigation')[0];
  const documentTime = navigation ? 'Respuesta del HTML · primer byte a ' + format(navigation.responseStart)
   + ' · último byte a ' + format(navigation.responseEnd) : '';
- const modelUrl = new URL('./chair-compact-assets.json',location.href).href;
+ const modelUrl = chairAssetUrl.href;
  const model = performance.getEntriesByName(modelUrl,'resource').at(-1);
  const transfer = model?.transferSize
   ? 'Archivo 3D transferido · ' + Math.round(model.transferSize / 1024) + ' KiB'
@@ -308,7 +319,7 @@ function createChair(THREE, meshes, buffer, materials) {
 
 try{
  const download = timeAsync('Descarga y lectura del archivo 3D',async () => {
-  const response = await fetch('./chair-compact-assets.json');
+  const response = await fetch(chairAssetUrl.href);
   if (!response.ok) throw Error('No se han podido cargar los archivos del sillón.');
   return response.json();
  });
