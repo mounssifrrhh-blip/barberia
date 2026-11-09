@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="es">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex">
+<title>BARBER SHOP — Portada 3D · acabados y apoyo del sillón</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}body{margin:0;background:#0a0b0d;color:#eedabd;font:14px Arial,sans-serif}a{color:inherit}button{font:inherit;cursor:pointer}header{position:absolute;z-index:5;inset:0 0 auto;padding:23px 5.2%;display:flex;align-items:center;justify-content:space-between;gap:20px}.logo{font:800 26px/.9 'Barlow Condensed',Impact,sans-serif;letter-spacing:.035em;text-decoration:none}nav{display:flex;gap:35px;font-size:12px;color:#e8e0d4}nav a{text-decoration:none}nav a:hover{color:#e0b773}.eyebrow{position:absolute;top:81px;left:0;right:0;text-align:center;color:#ac9575;font-size:9px;letter-spacing:.33em;z-index:1}main{position:relative;height:100svh;min-height:720px;overflow:hidden;background:radial-gradient(ellipse at 87% 47%,#91612724,transparent 50%),radial-gradient(ellipse at 28% 51%,#46505c16,transparent 50%)}main:after{content:'';position:absolute;inset:60% 0 0;pointer-events:none;background:radial-gradient(ellipse at 52% 63%,#b9894530,transparent 38%),linear-gradient(transparent,#07080acc);z-index:0}h1{position:absolute;inset:104px 0 auto;text-align:center;font:800 clamp(85px,16.6vw,250px)/.78 'Barlow Condensed',Impact,'Arial Narrow',sans-serif;letter-spacing:-.018em;margin:0;background:linear-gradient(115deg,#a97a42 5%,#efcf95 34%,#f7dbab 50%,#c89b5e 78%,#e3bf87 100%);background-clip:text;color:transparent;pointer-events:none;z-index:1;filter:drop-shadow(0 5px 18px #0005)}#scene,#smoke{position:absolute;inset:0;width:100%;height:100%}#smoke{z-index:0;pointer-events:none;opacity:.85}#scene{z-index:2;touch-action:pan-y}#scene canvas{display:block;touch-action:none;width:100%;height:100%}.bottom{position:absolute;bottom:25px;left:50%;transform:translateX(-50%);z-index:4;text-align:center;width:min(95%,640px);pointer-events:none}.cta{display:inline-flex;align-items:center;justify-content:center;min-width:245px;min-height:54px;padding:12px 35px;border-radius:40px;background:linear-gradient(110deg,#c49758,#f3d19a 50%,#c99a59);color:#231a11;text-decoration:none;font:700 23px 'Barlow Condensed',Impact,sans-serif;letter-spacing:.065em;box-shadow:0 0 35px #d3a36020,inset 0 1px 0 #ffefc7;pointer-events:auto;border:1px solid #eac78c}.tagline{font:italic 14px Georgia,serif;color:#e5dbcd;margin:12px 0 14px}.controls{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;pointer-events:auto}.controls button{border:0;background:transparent;color:#a6a095;padding:4px 8px;font-size:10px;letter-spacing:.025em}.controls button:hover{color:#f4ddb8}.controls button:disabled{opacity:.4;cursor:wait}.loading{position:absolute;z-index:5;top:48%;left:50%;transform:translate(-50%,-50%);max-width:85%;padding:22px 30px;border:1px solid #c9ab7144;background:#171713e8;color:#e5d5b7;text-align:center;line-height:1.6}.loading[hidden]{display:none}footer{padding:25px 5%;color:#9e978b;font-size:11px;line-height:1.7;border-top:1px solid #ffffff16}footer p{max-width:900px;margin:0 0 8px}button:focus-visible,a:focus-visible{outline:2px solid #f0d2a1;outline-offset:5px}.caption{position:absolute;z-index:3;right:4%;top:53%;writing-mode:vertical-rl;color:#a89c875f;font-size:9px;letter-spacing:.24em;pointer-events:none}.preview-label{color:#cba76b}
+@media(max-width:650px){header{padding:23px 20px}.logo{font-size:23px}nav{gap:18px;font-size:11px}.eyebrow{top:92px;font-size:8px;letter-spacing:.2em}h1{top:122px;font-size:20.4vw}main{min-height:720px}.bottom{bottom:23px}.cta{min-height:48px;min-width:215px;font-size:21px}.tagline{font-size:13px;margin:10px 0}.caption{display:none}.controls{gap:5px}.controls button{font-size:9px}}
+
+/* Photorealistic transparent cutouts: movement starts on load, independent of pointer. */
+.photo-tools{position:absolute;inset:0;z-index:3;pointer-events:none}
+.floating-tool{position:absolute;width:18%;height:auto;aspect-ratio:2/3;filter:drop-shadow(0 16px 14px #0007);animation:tool-float 8s ease-in-out infinite;will-change:transform}
+.tool-cutout{width:100%;height:100%;background-image:url('./barber-tools.svg');background-size:300% 100%;background-repeat:no-repeat;animation:tool-turn 11s ease-in-out infinite;will-change:transform}
+.tool-scissors{left:8%;top:28%;--tilt:-19deg;animation-duration:8.2s}
+.tool-scissors .tool-cutout{background-position:0% 50%}
+.tool-clipper{right:9%;top:29%;--tilt:16deg;animation-duration:9.3s;animation-delay:-3s}
+.tool-clipper .tool-cutout{background-position:50% 50%;animation-delay:-4s}
+.tool-razor{right:7%;top:56%;height:auto;width:20%;--tilt:46deg;animation-duration:10.6s;animation-delay:-5s}
+.tool-razor .tool-cutout{background-position:100% 50%;animation-delay:-7s}
+@keyframes tool-float{0%,100%{transform:translate3d(0,0,0) rotate(var(--tilt))}50%{transform:translate3d(10px,-22px,0) rotate(calc(var(--tilt) + 6deg))}}
+@keyframes tool-turn{0%,100%{transform:perspective(900px) rotateY(-9deg) rotateX(3deg)}50%{transform:perspective(900px) rotateY(9deg) rotateX(-3deg)}}
+main[data-paused="true"] .floating-tool,main[data-paused="true"] .tool-cutout{animation-play-state:paused}
+@media(max-width:650px){.floating-tool{width:25%;height:auto}.tool-scissors{left:0%;top:31%}.tool-clipper{right:0%;top:30%}.tool-razor{right:-1%;top:59%;width:29%;height:auto}}
+@media(prefers-reduced-motion:reduce){.floating-tool,.tool-cutout{animation:none}}
+
+.extra{aspect-ratio:0.7814407814407814}
+/* Wider editorial framing; title stays behind the WebGL chair. */
+main{height:100svh;min-height:680px;background:#08090a}
+main::before{content:'';position:absolute;inset:-18% 0 0;background:url('./barber-atmosphere.svg') center bottom/cover no-repeat;pointer-events:none}
+@media(max-width:650px){main::before{top:-38%;background-position:52% bottom}}
+main:after{inset:0;background:linear-gradient(#0002,transparent 45%,#0002 76%,#0006)}
+header{padding-top:20px}
+.eyebrow{top:68px;font-size:8px;opacity:.65}
+h1{top:12.5%;font-size:clamp(80px,14.3vw,220px);z-index:1;letter-spacing:-.01em}
+#scene{z-index:2}
+#smoke{opacity:.38}
+.caption{display:none}
+.bottom{bottom:2.3%}.bottom .cta{min-height:49px}.bottom .tagline{margin:8px 0 7px}
+.floating-tool{width:12%;height:auto;aspect-ratio:2/3;animation-duration:6.3s}
+.tool-scissors{left:6%;top:25%;width:12%;--tilt:-36deg;animation-duration:6.8s}
+.tool-clipper{left:23%;right:auto;top:34%;width:8.5%;--tilt:18deg;animation-duration:7.6s}
+.tool-razor{right:6%;top:58%;width:15%;--tilt:48deg;animation-duration:8.4s}
+.extra .tool-cutout{background-image:url('./barber-extra-tools.svg')}
+.tool-comb{left:7%;top:52%;width:10%;--tilt:-57deg;animation-duration:7s;animation-delay:-2s}
+.tool-comb .tool-cutout{background-position:0% 50%}
+.tool-brush{left:11%;top:67%;width:8%;--tilt:-22deg;animation-duration:5.8s;animation-delay:-4s}
+.tool-brush .tool-cutout{background-position:50% 50%}
+.tool-thinning{right:7%;top:28%;width:13%;--tilt:53deg;animation-duration:7.8s;animation-delay:-3s}
+.tool-thinning .tool-cutout{background-position:100% 50%}
+.tool-trimmer{right:24%;top:47%;width:7%;--tilt:24deg;animation-duration:6.7s;animation-delay:-5s}
+.tool-trimmer .tool-cutout{background-position:50% 50%}
+@keyframes tool-float{0%,100%{transform:translate3d(-7px,10px,0) rotate(calc(var(--tilt) - 5deg))}50%{transform:translate3d(14px,-29px,0) rotate(calc(var(--tilt) + 9deg))}}
+@keyframes tool-turn{0%,100%{transform:perspective(900px) rotateY(-15deg) rotateX(5deg)}50%{transform:perspective(900px) rotateY(15deg) rotateX(-5deg)}}
+@media(max-width:650px){main{min-height:660px;background-position:52% center}header{padding:19px 18px}nav{gap:15px}.eyebrow{top:69px}h1{top:16%;font-size:18.7vw}.bottom{bottom:3%}.floating-tool{width:17%}.tool-scissors{left:2%;top:30%;width:17%}.tool-clipper{left:20%;top:41%;width:12%}.tool-thinning{right:1%;top:31%;width:17%}.tool-trimmer{right:17%;top:48%;width:11%}.tool-comb{left:2%;top:57%;width:17%}.tool-brush{left:7%;top:69%;width:12%}.tool-razor{right:0%;top:65%;width:21%}}
+@media(prefers-reduced-motion:reduce){.floating-tool,.tool-cutout{animation:none}}
+</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}</script>
+<header><a class="logo" href="/">BARBER SHOP</a><nav aria-label="Navegación"><a href="/">Inicio</a><a href="/#servicios">Servicios</a><a href="/#reservar">Reservas</a></nav></header>
+<main><canvas id="smoke" aria-hidden="true"></canvas><p class="eyebrow">EL DETALLE MARCA EL ESTILO</p><h1>BARBER SHOP</h1><div id="scene" role="img" aria-label="Sillón de barbería 3D negro con herramientas flotantes. Arrastra para cambiar la vista."></div><div class="photo-tools" aria-hidden="true"><div class="floating-tool tool-scissors"><div class="tool-cutout"></div></div><div class="floating-tool tool-clipper"><div class="tool-cutout"></div></div><div class="floating-tool tool-razor"><div class="tool-cutout"></div></div><div class="floating-tool tool-comb extra"><div class="tool-cutout"></div></div><div class="floating-tool tool-brush extra"><div class="tool-cutout"></div></div><div class="floating-tool tool-thinning extra"><div class="tool-cutout"></div></div><div class="floating-tool tool-trimmer"><div class="tool-cutout"></div></div></div><div id="status" class="loading" role="status">Preparando tu experiencia 3D…</div><span class="caption">PRECISIÓN · CARÁCTER · ESTILO</span><div class="bottom"><a class="cta" href="/#reservar">RESERVAR CITA</a><p class="tagline">Tu estilo empieza aquí</p><div class="controls"><button id="motion" disabled>Pausar movimiento</button><button id="reset" disabled>Restablecer vista</button><button id="smoke-toggle" aria-pressed="true">Humo: activado</button></div></div></main>
+<footer><p class="preview-label">Portada en desarrollo · Versión 9 · Reserva de demostración</p><p>Sillón “Barber Chair” de Tyron / OmTy, <a href="https://www.fab.com/listings/800136ce-e601-49b4-87a1-ada6f8a3bc51">modelo original</a>, licencia <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. Cambios: texturas a 1024 px, geometría original íntegra, ajuste de acabados, iluminación y encuadre del suelo original, sombra de contacto y reflejo tenue del pedestal. Fondo y herramientas: imágenes generadas con acabado fotorrealista, recortadas sobre fondo transparente y animadas automáticamente. La página principal no se ha editado.</p></footer>
+<script type="module">
+const status=document.querySelector('#status'),motion=document.querySelector('#motion'),reset=document.querySelector('#reset');
+const reduced=matchMedia('(prefers-reduced-motion: reduce)');
+let playing=!reduced.matches,sceneReady=false;
+let controls,renderer,scene,camera,chair,toolRig;const tools=[];
+const host=document.querySelector('#scene'),fogCanvas=document.querySelector('#smoke'),ctx=fogCanvas.getContext('2d');
+let fogWidth=1,fogHeight=1,phase=0,showSmoke=true;
+function sizeSmoke(){const ratio=Math.min(.65,900/host.clientWidth);fogWidth=Math.max(1,Math.round(host.clientWidth*ratio));fogHeight=Math.max(1,Math.round(host.clientHeight*ratio));fogCanvas.width=fogWidth;fogCanvas.height=fogHeight}
+function hash(x,y){const n=Math.sin(x*127.1+y*311.7)*43758.5453;return n-Math.floor(n)}
+function noise(x,y){const ix=Math.floor(x),iy=Math.floor(y),fx=x-ix,fy=y-iy,u=fx*fx*(3-2*fx),v=fy*fy*(3-2*fy);return (hash(ix,iy)*(1-u)+hash(ix+1,iy)*u)*(1-v)+(hash(ix,iy+1)*(1-u)+hash(ix+1,iy+1)*u)*v}
+const cloud=document.createElement('canvas');cloud.width=cloud.height=256;const cloudCtx=cloud.getContext('2d'),pixels=cloudCtx.createImageData(256,256);
+for(let y=0;y<256;y++)for(let x=0;x<256;x++){const nx=(x-128)/128,ny=(y-128)/128,r=nx*nx+ny*ny;let f=0,amp=.53,freq=3;for(let k=0;k<5;k++){f+=noise(x/256*freq+17,y/256*freq+53)*amp;amp*=.5;freq*=2.1}const a=Math.pow(Math.max(0,1-r),1.3)*Math.pow(Math.max(0,f-.25)*1.7,1.55);const i=(y*256+x)*4;pixels.data[i]=168;pixels.data[i+1]=164;pixels.data[i+2]=157;pixels.data[i+3]=Math.min(170,Math.round(a*210))}cloudCtx.putImageData(pixels,0,0);
+function smoke(){ctx.clearRect(0,0,fogWidth,fogHeight);if(!showSmoke)return;ctx.globalCompositeOperation='screen';for(let i=0;i<12;i++){const side=i%2?1:-1,w=fogWidth*(.52+Math.sin(i*4)*.10),h=fogHeight*(.45+Math.cos(i)*.08),x=fogWidth*(.5+side*(.26+Math.sin(phase*.17+i)*.10)),y=fogHeight*(.50+Math.cos(phase*.11+i*1.7)*.13);ctx.save();ctx.translate(x,y);ctx.rotate(Math.sin(phase*.06+i)*.6);ctx.globalAlpha=.32+Math.sin(i+phase*.14)*.08;ctx.drawImage(cloud,-w/2,-h/2,w,h);ctx.restore()}ctx.globalAlpha=1;ctx.globalCompositeOperation='source-over'}
+sizeSmoke();smoke();let smokeLast=performance.now(),smokeFrame=0;
+function fogLoop(now){requestAnimationFrame(fogLoop);const dt=Math.min((now-smokeLast)/1000,.06);smokeLast=now;if(document.hidden||!showSmoke)return;if(playing)phase+=dt*1.35;if(++smokeFrame%2===0)smoke()}requestAnimationFrame(fogLoop);
+const smokeButton=document.querySelector('#smoke-toggle');smokeButton.onclick=()=>{showSmoke=!showSmoke;smokeButton.textContent=showSmoke?'Humo: activado':'Humo: desactivado';smokeButton.setAttribute('aria-pressed',String(showSmoke));smoke()};
+function syncButton(){document.querySelector('main').dataset.paused=String(!playing);motion.textContent=playing?'Pausar movimiento':'Activar movimiento';motion.setAttribute('aria-pressed',String(!playing))}
+motion.onclick=()=>{playing=!playing;syncButton()};motion.disabled=false;syncButton();
+reduced.addEventListener('change',()=>{playing=!reduced.matches;syncButton()});
+let timeout=setTimeout(()=>{if(!sceneReady)status.textContent='La carga está tardando. Si no aparece el sillón, recarga la página y comprueba tu conexión.'},25000);
+try{
+ const THREE=await import('three');
+ const [{OBJLoader},{OrbitControls},{RoomEnvironment},{RoundedBoxGeometry}]=await Promise.all([import('three/addons/loaders/OBJLoader.js'),import('three/addons/controls/OrbitControls.js'),import('three/addons/environments/RoomEnvironment.js'),import('three/addons/geometries/RoundedBoxGeometry.js')]);
+ renderer=new THREE.WebGLRenderer({alpha:true,antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,1.75));renderer.setSize(host.clientWidth,host.clientHeight);renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=.9;host.appendChild(renderer.domElement);
+ scene=new THREE.Scene();camera=new THREE.PerspectiveCamera(34,host.clientWidth/host.clientHeight,.01,50);
+ const pmrem=new THREE.PMREMGenerator(renderer),room=new RoomEnvironment();scene.environment=pmrem.fromScene(room,.05).texture;room.dispose();pmrem.dispose();
+ scene.add(new THREE.HemisphereLight(0xeef3ff,0x473117,.55));
+ function light(color,intensity,x,y,z){const l=new THREE.DirectionalLight(color,intensity);l.position.set(x,y,z);scene.add(l);return l}
+ light(0xf5f0e7,1.65,-3,5,4);
+ light(0xe9b261,2.25,3,3,-2);
+ light(0xa8b8cc,.55,-2,1,-3);
+ const response=await fetch('./chair-assets.json');if(!response.ok)throw Error('No se han podido cargar los archivos del sillón.');
+ const assets=await response.json(),loader=new THREE.TextureLoader();
+ async function texture(name,color=false){const t=await loader.loadAsync(assets.textures[name]);if(color)t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=Math.min(4,renderer.capabilities.getMaxAnisotropy());return t}
+ const mats={};await Promise.all(['Leather','Metal','Plastic'].map(async name=>{const [map,normalMap,roughnessMap]=await Promise.all([texture(name+'_albedo',true),texture(name+'_normal'),name==='Leather'?null:texture(name+'_roughness')]);mats[name]=new THREE.MeshStandardMaterial({map,normalMap,roughnessMap,metalness:name==='Metal'?1:0,roughness:name==='Leather'?.86:name==='Metal'?.68:.8,color:name==='Leather'?0x696969:name==='Plastic'?0x777777:0xd7d3cb,envMapIntensity:name==='Metal'?.68:.28,normalScale:new THREE.Vector2(.4,.4)});}));
+ const bytes=Uint8Array.from(atob(assets.obj),c=>c.charCodeAt(0));const stream=new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));const text=await new Response(stream).text();
+ chair=new OBJLoader().parse(text);chair.traverse(mesh=>{if(mesh.isMesh){const old=Array.isArray(mesh.material)?mesh.material[0]:mesh.material;mesh.material=mats[old.name.trim()]||mats.Leather;}});
+ const bounds=new THREE.Box3().setFromObject(chair),size=bounds.getSize(new THREE.Vector3()),center=bounds.getCenter(new THREE.Vector3());const scale=2.55/size.y;chair.scale.setScalar(scale);chair.position.set(-center.x*scale,-bounds.min.y*scale,-center.z*scale);
+ const chairPivot=new THREE.Group();chairPivot.add(chair);scene.add(chairPivot);
+
+ // Soft shadows stay on the floor around the hydraulic pedestal.
+ const contact = document.createElement('canvas');
+ contact.width = contact.height = 256;
+ const shadowContext = contact.getContext('2d');
+ const gradient = shadowContext.createRadialGradient(128,128,0,128,128,128);
+ gradient.addColorStop(0,'rgba(0,0,0,.92)');
+ gradient.addColorStop(.56,'rgba(0,0,0,.82)');
+ gradient.addColorStop(.78,'rgba(0,0,0,.34)');
+ gradient.addColorStop(1,'rgba(0,0,0,0)');
+ shadowContext.fillStyle = gradient;
+ shadowContext.fillRect(0,0,256,256);
+ const shadowTexture = new THREE.CanvasTexture(contact);
+ function floorShadow(width, depth, x, y, z, opacity, order) {
+  const material = new THREE.MeshBasicMaterial({map:shadowTexture,transparent:true,depthWrite:false,opacity});
+  const shadow = new THREE.Mesh(new THREE.PlaneGeometry(width,depth),material);
+  shadow.rotation.x = -Math.PI/2;
+  shadow.position.set(x,y,z);
+  shadow.renderOrder = order;
+  chairPivot.add(shadow);
+ }
+ floorShadow(2.45,1.95,-.02,-.004,-.38,.28,-2);
+ floorShadow(1.82,1.7,.065,-.001,-.21,1,-1);
+
+ // Mirror only the pedestal and fade the reflection into the existing photograph.
+ const pedestal = chair.getObjectByName('Base_low');
+ const reflectedPedestal = pedestal.clone();
+ const reflectionMaterial = pedestal.material.clone();
+ reflectionMaterial.transparent = true;
+ reflectionMaterial.opacity = .20;
+ reflectionMaterial.color.multiply(new THREE.Color(0xe9cba5));
+ reflectionMaterial.roughness = .72;
+ reflectionMaterial.depthWrite = false;
+ reflectionMaterial.onBeforeCompile = shader => {
+  shader.uniforms.pedestalScale = {value: scale};
+  shader.uniforms.pedestalBottom = {value: bounds.min.y};
+  shader.vertexShader = shader.vertexShader.replace('#include <common>', `#include <common>
+   uniform float pedestalScale;
+   uniform float pedestalBottom;
+   varying float reflectionDepth;`);
+  shader.vertexShader = shader.vertexShader.replace('#include <begin_vertex>', `#include <begin_vertex>
+   reflectionDepth = max(0.0, (position.y - pedestalBottom) * pedestalScale);`);
+  shader.fragmentShader = shader.fragmentShader.replace('#include <common>', `#include <common>
+   varying float reflectionDepth;`);
+  shader.fragmentShader = shader.fragmentShader.replace('#include <alphamap_fragment>', `#include <alphamap_fragment>
+   diffuseColor.a *= 1.0 - smoothstep(0.015, 0.16, reflectionDepth);`);
+ };
+ reflectedPedestal.material = reflectionMaterial;
+ reflectedPedestal.castShadow = false;
+ reflectedPedestal.receiveShadow = false;
+ reflectedPedestal.renderOrder = 1;
+ const reflectedChairSpace = new THREE.Group();
+ reflectedChairSpace.position.copy(chair.position);
+ reflectedChairSpace.scale.copy(chair.scale);
+ reflectedChairSpace.add(reflectedPedestal);
+ const floorReflection = new THREE.Group();
+ floorReflection.scale.y = -1;
+ floorReflection.position.y = -.004;
+ floorReflection.add(reflectedChairSpace);
+ chairPivot.add(floorReflection);
+ controls=new OrbitControls(camera,renderer.domElement);controls.enablePan=false;controls.enableZoom=false;controls.enableDamping=true;controls.minPolarAngle=1.02;controls.maxPolarAngle=1.45;controls.minAzimuthAngle=-.6;controls.maxAzimuthAngle=.6;
+ let userOrbit=false;controls.addEventListener('start',()=>{userOrbit=true});
+ function initial(){const mobile=host.clientWidth<650;camera.position.set(mobile?2.5:2.9,2.25,mobile?10:7.8);controls.target.set(0,1.36,0);chairPivot.rotation.y=-.15;userOrbit=false;controls.update();}
+ initial();reset.onclick=initial;
+ function toolLayout(){}
+ sceneReady=true;clearTimeout(timeout);status.hidden=true;motion.disabled=false;reset.disabled=false;syncButton();
+ let last=performance.now(),motionTime=0;
+ function frame(now){requestAnimationFrame(frame);const dt=Math.min((now-last)/1000,.05);last=now;if(document.hidden)return;if(playing){motionTime+=dt;if(!userOrbit)chairPivot.rotation.y=-.15+Math.sin(motionTime*.24)*.38;tools.forEach(({object,y,rz},i)=>{object.position.y=y+Math.sin(motionTime*.7+i*2)*.08;object.rotation.y=Math.sin(motionTime*.35+i)*.35;object.rotation.z=rz+Math.sin(motionTime*.5+i)*.08});}controls.update();renderer.render(scene,camera)}requestAnimationFrame(frame);
+ const observer=new ResizeObserver(()=>{renderer.setSize(host.clientWidth,host.clientHeight);camera.aspect=host.clientWidth/host.clientHeight;camera.updateProjectionMatrix();sizeSmoke();toolLayout();smoke()});observer.observe(host);
+ renderer.domElement.addEventListener('webglcontextlost',e=>{e.preventDefault();playing=false;status.hidden=false;status.textContent='Se ha perdido la conexión gráfica. Recarga la página para volver a cargar el sillón.'});
+}catch(error){clearTimeout(timeout);status.hidden=false;status.textContent='No se ha podido iniciar la prueba 3D. Necesita WebGL 2 y acceso a la biblioteca Three.js. '+error.message;console.error(error)}
+</script>
+</html>
