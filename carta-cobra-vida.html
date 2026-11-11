@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Barber Shop | La carta cobra vida</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600&amp;family=Barlow+Condensed:wght@600;700&amp;display=swap">
+<script>
+ if (matchMedia('(prefers-reduced-motion:no-preference)').matches) {
+  document.documentElement.classList.add('entry-pending');
+  setTimeout(() => document.documentElement.classList.remove('entry-pending'),1200);
+ }
+</script>
+<style>
+
+body{margin:0;background:#0b0a09;color:#ead8ba;font:15px Barlow,Arial,sans-serif}
+*{box-sizing:border-box}
+:root{--font-heading:'Barlow Condensed','Arial Narrow',Arial,sans-serif}
+button{font:inherit;cursor:pointer}
+button:focus-visible,a:focus-visible{outline:2px solid #f0ca8e;outline-offset:3px}
+#servicios{min-height:100svh;overflow:clip;padding-top:clamp(45px,6vw,90px)}
+.services-carousel{position:relative;isolation:isolate}
+.services-carousel::after{
+ content:"";position:absolute;z-index:2;pointer-events:none;inset:4% 0 6%;
+ background:linear-gradient(90deg,transparent,#c88b3610 43%,#f4c27d70 49.8%,#ffe4b3a0 50%,#d99b4825 51%,transparent 58%);
+ opacity:0;
+}
+.entry-controls{display:flex;justify-content:center;margin-top:18px}
+.entry-controls button{
+ border:1px solid #c39a6470;border-radius:20px;padding:8px 17px;background:#17110e;color:#f0d5ad;
+}
+.entry-controls button:disabled{opacity:.45;cursor:default}
+@media(prefers-reduced-motion:no-preference){
+ .entry-pending .service-slide{opacity:0}
+ .entry-playing .services-carousel::after{animation:projection-light .95s ease-out both}
+ .entry-playing .service-slide{animation:portrait-reveal 1.24s var(--entry-delay,0s) cubic-bezier(.2,.72,.28,1) both}
+ .entry-playing .service-slide:nth-child(2){--entry-delay:.10s;--entry-yaw:8deg}
+ .entry-playing .service-slide:nth-child(3){--entry-delay:.20s;--entry-yaw:-7deg}
+ .entry-playing .service-slide:nth-child(4){--entry-delay:.30s;--entry-yaw:5deg}
+ .entry-playing .service-card :is(h3,p,a){animation:service-details .38s calc(.85s + var(--entry-delay,0s)) ease both}
+ @keyframes projection-light{
+  0%{opacity:0;transform:translateX(-58%)}
+  23%{opacity:.8}
+  78%{opacity:.75}
+  100%{opacity:0;transform:translateX(57%)}
+ }
+ @keyframes portrait-reveal{
+  0%{opacity:0;clip-path:inset(0 100% 0 0);transform:perspective(900px) translate3d(-8px,14px,-95px) rotateY(var(--entry-yaw,-9deg))}
+  58%{opacity:1;clip-path:inset(0 -25px -40px -25px)}
+  100%{opacity:1;clip-path:inset(0 -30px -40px -30px);transform:none}
+ }
+ @keyframes service-details{
+  from{opacity:0;transform:translateY(7px)}
+  to{opacity:1;transform:none}
+ }
+}
+#servicios{
+ position:relative;isolation:isolate;
+ padding:clamp(64px,8.8vw,132px) 0 clamp(76px,10vw,150px);
+ background:radial-gradient(ellipse at 83% 66%,#29190d 0%,transparent 60%),#0b0a09;
+}
+#servicios::before{
+ content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:.23;
+ background:url('./barber-atmosphere.svg') center 42%/cover no-repeat;
+ mask-image:linear-gradient(transparent,#000 34%,#000 70%,transparent);
+}
+.services-wrap{width:min(1260px,94%);margin-inline:auto}
+.services-heading{text-align:center;margin-bottom:clamp(17px,3vw,35px)}
+.services-kicker{
+ margin:0 0 14px;color:#dbb27d;font-size:11px;font-weight:600;
+ letter-spacing:.24em;text-transform:uppercase;
+}
+.services-heading h2{
+ margin:0;color:#f3d9ad;font:700 clamp(50px,7.5vw,105px)/.88 var(--font-heading);
+ letter-spacing:.015em;text-transform:uppercase;
+}
+.services-intro{margin:16px auto 0;color:#d3c0a4;font-size:15px}
+.services-carousel{
+ --carousel-inset:24px;
+ display:grid;grid-template-columns:42px minmax(0,1fr) 42px;align-items:center;
+}
+.services-track{
+ display:flex;gap:19px;align-items:stretch;overflow-x:auto;overflow-y:hidden;
+ margin:0;padding:25px var(--carousel-inset) 35px;list-style:none;
+ scroll-snap-type:x mandatory;scroll-padding-inline:var(--carousel-inset);
+ scrollbar-width:thin;scrollbar-color:#a77d48 #1c1510;
+}
+.service-slide{flex:0 0 29%;min-width:0;scroll-snap-align:start;perspective:1000px}
+.service-slide:is(:hover,:focus-within){z-index:1}
+.service-card{
+ position:relative;isolation:isolate;overflow:hidden;
+ display:flex;flex-direction:column;justify-content:flex-end;aspect-ratio:2/3;
+ min-height:320px;padding:clamp(14px,1.8vw,23px);border:1px solid #be9b674d;
+ border-radius:16px;background:#17110e;box-shadow:0 12px 25px #0007;
+ transform:translateZ(0);transition:transform .28s ease,border-color .22s,box-shadow .28s ease;
+}
+.service-card img{
+ position:absolute;inset:0;z-index:-2;width:100%;height:100%;object-fit:cover;
+ object-position:var(--portrait-focus,52% center);transition:transform .34s ease;
+}
+.service-card::after{
+ content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+ background:linear-gradient(180deg,#09070533 0%,transparent 30%,#0907051a 44%,#090705e8 72%,#090705 100%);
+}
+.service-number{
+ position:absolute;top:12px;right:12px;display:grid;place-items:center;
+ width:27px;height:27px;border-radius:50%;background:#e6bd82;color:#2a1a0c;
+ font-size:11px;font-weight:600;
+}
+.service-card h3{
+ margin:0;color:#f5dbb0;font:700 clamp(26px,2.75vw,40px)/.94 var(--font-heading);
+ text-transform:uppercase;
+}
+.service-card p{margin:9px 0 13px;color:#e5d5bf;font-size:14px;line-height:1.3}
+.service-card a{
+ align-self:start;padding:7px 17px;border:1px solid #d4ab6d;border-radius:20px;
+ color:#f0d5ad;text-decoration:none;font-size:13px;font-weight:600;
+}
+.service-card:is(:hover,:focus-within) a{background:#e6bd82;color:#271a0d}
+.service-card:is(:hover,:focus-within){border-color:#dfb47b;box-shadow:0 17px 30px #000b}
+@media(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){
+ .service-slide:hover .service-card{
+  transform:translate3d(0,-7px,55px) rotateX(var(--portrait-pitch,0deg)) rotateY(var(--portrait-yaw,0deg));
+ }
+ .service-slide:hover .service-card img{transform:scale(1.08)}
+}
+.carousel-arrow{
+ justify-self:center;width:36px;height:36px;display:grid;place-items:center;padding:0;
+ border:1px solid #c19a6166;border-radius:50%;background:#100d0a;color:#e9bf83;font-size:20px;
+}
+.carousel-arrow:disabled{opacity:.28;cursor:default}
+.services-note{margin:18px 0 0;text-align:center;color:#c9af8e;font-size:12px}
+@media(max-width:920px){.service-slide{flex-basis:44%}}
+@media(max-width:580px){
+ .services-carousel{--carousel-inset:10px;grid-template-columns:28px minmax(0,1fr) 28px}
+ .services-track{gap:14px}
+ .service-slide{flex-basis:86%}
+ .carousel-arrow{width:28px;height:28px;font-size:16px}
+ .service-card{min-height:300px}
+}
+@media(prefers-reduced-motion:reduce){.service-card,.service-card img{transition:none}}
+</style>
+</head>
+<body>
+<main>
+<section id="servicios" aria-labelledby="services-title">
+ <div class="services-wrap">
+  <div class="services-heading">
+   <p class="services-kicker">La carta de Barber Shop</p>
+   <h2 id="services-title">Elige tu corte</h2>
+   <p class="services-intro">Corte de pelo, barba y cortes infantiles.</p>
+  </div>
+  <div class="services-carousel">
+   <button class="carousel-arrow" id="services-prev" type="button" aria-label="Servicio anterior" aria-controls="services-track" disabled>‹</button>
+   <ul class="services-track" id="services-track" role="list" aria-label="Servicios de barbería">
+    <li class="service-slide">
+     <article class="service-card" style="--portrait-focus:55% center">
+      <img src="./servicio-corte.svg" alt="Corte degradado con textura" width="720" height="480" decoding="async" fetchpriority="low">
+      <span class="service-number" aria-hidden="true">01</span>
+      <h3>Corte de pelo</h3>
+      <p>Consulta de estilo, corte y acabado.</p>
+      <a href="/#reservar" aria-label="Ir a reservas desde corte de pelo">Reservar cita</a>
+     </article>
+    </li>
+    <li class="service-slide">
+     <article class="service-card" style="--portrait-focus:52% center">
+      <img src="./servicio-corte-barba.svg" alt="Corte de pelo con barba definida" width="720" height="480" decoding="async" fetchpriority="low">
+      <span class="service-number" aria-hidden="true">02</span>
+      <h3>Corte de pelo y barba</h3>
+      <p>Corte y perfilado en la misma visita.</p>
+      <a href="/#reservar" aria-label="Ir a reservas desde corte de pelo y barba">Reservar cita</a>
+     </article>
+    </li>
+    <li class="service-slide">
+     <article class="service-card" style="--portrait-focus:56% center">
+      <img src="./servicio-barba.svg" alt="Detalle de una barba recortada y perfilada" width="720" height="480" decoding="async" fetchpriority="low">
+      <span class="service-number" aria-hidden="true">03</span>
+      <h3>Corte de barba</h3>
+      <p>Recorte y definición de los contornos.</p>
+      <a href="/#reservar" aria-label="Ir a reservas desde corte de barba">Reservar cita</a>
+     </article>
+    </li>
+    <li class="service-slide">
+     <article class="service-card" style="--portrait-focus:49% center">
+      <img src="./servicio-infantil.svg" alt="Niño con corte corto y peinado de lado" width="720" height="480" decoding="async" fetchpriority="low">
+      <span class="service-number" aria-hidden="true">04</span>
+      <h3>Corte para niños pequeños</h3>
+      <p>Un corte cómodo y fácil de peinar.</p>
+      <a href="/#reservar" aria-label="Ir a reservas desde corte para niños pequeños">Reservar cita</a>
+     </article>
+    </li>
+   </ul>
+   <button class="carousel-arrow" id="services-next" type="button" aria-label="Servicio siguiente" aria-controls="services-track">›</button>
+  </div>
+  <div class="entry-controls"><button type="button" id="repeat-entry" disabled>Repetir entrada</button></div>
+  <p class="services-note">Carta de muestra. Precios y duraciones por confirmar.</p>
+ </div>
+</section>
+</main>
+<script>
+(() => {
+ const track = document.querySelector('#services-track');
+ const prev = document.querySelector('#services-prev');
+ const next = document.querySelector('#services-next');
+ const slides = Array.from(track.children);
+ const section = track.closest("section");
+ const replay = document.querySelector("#repeat-entry");
+ const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+ const canTilt = matchMedia('(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference)');
+ function updateArrows() {
+  prev.disabled = track.scrollLeft <= 1;
+  next.disabled = track.scrollLeft + track.clientWidth >= track.scrollWidth-1;
+ }
+ function slide(direction) {
+  const step = slides[1].offsetLeft-slides[0].offsetLeft;
+  track.scrollBy({left:step*direction,behavior:reducedMotion.matches?'instant':'smooth'});
+ }
+ prev.addEventListener('click',()=>slide(-1));
+ next.addEventListener('click',()=>slide(1));
+ track.addEventListener('scroll',updateArrows,{passive:true});
+ new ResizeObserver(updateArrows).observe(track);
+ updateArrows();
+ function playEntry() {
+  if (reducedMotion.matches) return;
+  track.scrollLeft = 0;
+  section.classList.remove('entry-playing');
+  void section.offsetWidth;
+  section.classList.add('entry-playing');
+ }
+ replay.addEventListener('click',playEntry);
+ slides.at(-1).addEventListener('animationend', event => {
+  if (event.animationName === 'portrait-reveal') section.classList.remove('entry-playing');
+ });
+ Promise.allSettled(slides.map(item => item.querySelector('img').decode())).then(() => {
+  document.documentElement.classList.remove('entry-pending');
+  replay.disabled = reducedMotion.matches;
+  playEntry();
+ });
+ reducedMotion.addEventListener('change', () => {
+  replay.disabled = reducedMotion.matches;
+  if (reducedMotion.matches) section.classList.remove('entry-playing');
+ });
+ for (const item of slides) {
+  const card = item.querySelector('.service-card');
+  item.addEventListener('pointermove',event => {
+   if (!canTilt.matches || event.pointerType !== 'mouse') return;
+   const rect = item.getBoundingClientRect();
+   const x = Math.max(0,Math.min(1,(event.clientX-rect.left)/rect.width))-.5;
+   const y = Math.max(0,Math.min(1,(event.clientY-rect.top)/rect.height))-.5;
+   card.style.setProperty('--portrait-pitch',(-y*10)+'deg');
+   card.style.setProperty('--portrait-yaw',(x*12)+'deg');
+  });
+  item.addEventListener('pointerleave',() => {
+   card.style.removeProperty('--portrait-pitch');
+   card.style.removeProperty('--portrait-yaw');
+  });
+ }
+})();
+</script>
+</body>
+</html>
