@@ -316,10 +316,12 @@ h1{top:12.5%;font-size:clamp(80px,14.3vw,220px);font-weight:600;letter-spacing:.
 }
 
 @media(min-width:761px){
- .booking-calendar{padding:8px 10px}
- .booking-calendar-nav{margin-bottom:5px;padding-bottom:5px}
- .booking-calendar-nav strong{font-size:clamp(19px,1.5vw,27px)}
- .booking-calendar button{min-height:clamp(31px,2.2vw,36px)}
+ .booking-calendar{width:min(100%,340px);justify-self:center;padding:6px 9px}
+ .booking-calendar-nav{grid-template-columns:30px 1fr 30px;margin-bottom:3px;padding-bottom:3px}
+ .booking-calendar-nav strong{font-size:21px}
+ .booking-calendar button{min-height:28px}
+ .booking-calendar-grid button{font-size:15px}
+ .booking-calendar legend{font-size:21px}
  .booking-calendar-grid{gap:2px}
 }
 </style>
