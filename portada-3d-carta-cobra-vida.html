@@ -197,11 +197,6 @@ h1{top:12.5%;font-size:clamp(80px,14.3vw,220px);font-weight:600;letter-spacing:.
  background:linear-gradient(90deg,transparent,#c88b3610 43%,#f4c27d70 49.8%,#ffe4b3a0 50%,#d99b4825 51%,transparent 58%);
  opacity:0;
 }
-.entry-controls{display:flex;justify-content:center;margin-top:18px}
-.entry-controls button{
- border:1px solid #c39a6470;border-radius:20px;padding:8px 17px;background:#17110e;color:#f0d5ad;
-}
-.entry-controls button:disabled{opacity:.45;cursor:default}
 @media(prefers-reduced-motion:no-preference){
  .entry-playing .services-carousel::after{animation:projection-light .95s ease-out both}
  .entry-playing .service-slide{animation:portrait-reveal 1.24s var(--entry-delay,0s) cubic-bezier(.2,.72,.28,1) both}
@@ -280,7 +275,6 @@ h1{top:12.5%;font-size:clamp(80px,14.3vw,220px);font-weight:600;letter-spacing:.
    </ul>
    <button class="carousel-arrow" id="services-next" type="button" aria-label="Servicio siguiente" aria-controls="services-track">›</button>
   </div>
-  <div class="entry-controls"><button type="button" id="repeat-entry" disabled>Repetir entrada</button></div>
   <p class="services-note">Carta de muestra. Precios y duraciones por confirmar.</p>
  </div>
 </section>
@@ -309,30 +303,16 @@ h1{top:12.5%;font-size:clamp(80px,14.3vw,220px);font-weight:600;letter-spacing:.
  updateArrows();
 
  const section = track.closest('section');
- const replay = document.querySelector('#repeat-entry');
- function playEntry() {
-  if (reducedMotion.matches) return;
-  section.classList.remove('entry-playing');
-  void section.offsetWidth;
-  section.classList.add('entry-playing');
- }
  const observer = new IntersectionObserver(([entry]) => {
   if (entry.intersectionRatio < .2) return;
   observer.disconnect();
-  playEntry();
+  if (!reducedMotion.matches) section.classList.add('entry-playing');
  },{threshold:.2});
  observer.observe(track);
- replay.disabled = reducedMotion.matches;
- replay.addEventListener('click', () => {
-  observer.disconnect();
-  track.scrollLeft = 0;
-  playEntry();
- });
  slides.at(-1).addEventListener('animationend', event => {
   if (event.animationName === 'portrait-reveal') section.classList.remove('entry-playing');
  });
  reducedMotion.addEventListener('change', () => {
-  replay.disabled = reducedMotion.matches;
   if (reducedMotion.matches) section.classList.remove('entry-playing');
  });
 
