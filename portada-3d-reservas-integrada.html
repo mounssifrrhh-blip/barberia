@@ -332,6 +332,17 @@ h1{top:12.5%;font-size:clamp(80px,14.3vw,220px);font-weight:600;letter-spacing:.
  .booking-calendar legend{font-size:21px}
  .booking-calendar-grid{gap:2px}
 }
+
+.booking-date-picker summary{
+ display:flex;align-items:center;gap:8px;min-height:44px;padding:9px 12px;
+ border:1px solid var(--booking-line);border-radius:8px;list-style:none;cursor:pointer;
+ background:#14110e;color:#f3dec0;font:16px var(--font-text);
+}
+.booking-date-picker summary::-webkit-details-marker{display:none}
+.booking-date-picker summary::after{content:"⌄";color:var(--booking-gold);margin-left:auto}
+.booking-date-picker[open] summary::after{transform:rotate(180deg)}
+.booking-date-picker summary span:first-child{font-weight:600;color:#edc58c}
+.booking-date-picker .booking-calendar{margin:10px auto 0}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}</script>
 <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js" crossorigin>
@@ -408,7 +419,9 @@ h1{top:12.5%;font-size:clamp(80px,14.3vw,220px);font-weight:600;letter-spacing:.
       <option value="infantil">Corte para niños pequeños</option>
      </select>
     </div>
-    <fieldset class="booking-calendar" id="booking-calendar" hidden>
+    <details class="booking-date-picker" id="booking-date-picker" hidden>
+     <summary id="booking-date-toggle"><span>Fecha</span><span id="booking-date-label">Elige un día</span></summary>
+     <fieldset class="booking-calendar" id="booking-calendar">
      <legend>Fecha</legend>
      <div class="booking-calendar-nav">
       <button type="button" id="booking-prev-month" aria-label="Mes anterior">‹</button>
@@ -421,7 +434,8 @@ h1{top:12.5%;font-size:clamp(80px,14.3vw,220px);font-weight:600;letter-spacing:.
      </div>
      <div class="booking-calendar-grid" id="booking-days"></div>
      <p class="booking-date-error" id="booking-date-error" role="status"></p>
-    </fieldset>
+     </fieldset>
+    </details>
     <div class="booking-field" id="booking-date-fallback"><label for="booking-date">Fecha preferida</label><input type="date" id="booking-date" required></div>
     <div class="booking-field"><label for="booking-time">Hora preferida</label><input type="time" id="booking-time" required></div>
     <button type="submit" class="booking-primary">Preparar mensaje de WhatsApp</button>
@@ -502,7 +516,10 @@ h1{top:12.5%;font-size:clamp(80px,14.3vw,220px);font-weight:600;letter-spacing:.
  const copy = document.querySelector('#booking-copy');
  const status = document.querySelector('#booking-status');
  const dateError = document.querySelector('#booking-date-error');
- const calendar = document.querySelector('#booking-calendar');
+ const datePicker = document.querySelector('#booking-date-picker');
+ const dateToggle = document.querySelector('#booking-date-toggle');
+ const dateLabel = document.querySelector('#booking-date-label');
+ const shortDate = new Intl.DateTimeFormat('es-ES',{day:'numeric',month:'short',year:'numeric',timeZone:'UTC'});
  const monthName = document.querySelector('#booking-month');
  const days = document.querySelector('#booking-days');
  const previousMonth = document.querySelector('#booking-prev-month');
@@ -531,6 +548,7 @@ h1{top:12.5%;font-size:clamp(80px,14.3vw,220px);font-weight:600;letter-spacing:.
  let month = new Date(date.min.slice(0,7)+'-01T12:00:00Z');
 
  function updateDaySelection() {
+  dateLabel.textContent = date.value ? shortDate.format(new Date(date.value+'T12:00:00Z')) : 'Elige un día';
   for (const button of days.querySelectorAll('button')) {
    button.setAttribute('aria-pressed',String(button.dataset.day === date.value));
   }
@@ -570,9 +588,11 @@ h1{top:12.5%;font-size:clamp(80px,14.3vw,220px);font-weight:600;letter-spacing:.
   date.value = day.dataset.day;
   resetReview();
   updateDaySelection();
+  datePicker.open = false;
+  dateToggle.focus({preventScroll:true});
  });
  renderMonth();
- calendar.hidden = false;
+ datePicker.hidden = false;
  date.required = false;
  document.querySelector('#booking-date-fallback').hidden = true;
 
@@ -596,6 +616,7 @@ h1{top:12.5%;font-size:clamp(80px,14.3vw,220px);font-weight:600;letter-spacing:.
   const now = currentBookingTime();
   date.min = now.date;
   if (!date.value || date.value < now.date) {
+   datePicker.open = true;
    dateError.textContent = 'Elige hoy o una fecha posterior en el calendario.';
    days.querySelector('button:not(:disabled)')?.focus();
    return;
