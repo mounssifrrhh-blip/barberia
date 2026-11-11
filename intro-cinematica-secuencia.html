@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Barber Shop | Introducción de la carta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600&amp;family=Barlow+Condensed:wght@600;700&amp;display=swap">
+<style>
+ :root {
+  color-scheme:dark;
+  --black:#0b0a09;
+  --gold:#edc78c;
+  --duration:6.4s;
+  font-family:Barlow,Arial,sans-serif;
+ }
+ * { box-sizing:border-box }
+ body { margin:0;background:var(--black);color:var(--gold) }
+ .scene {
+  position:relative;isolation:isolate;overflow:hidden;display:grid;place-items:end center;
+  height:clamp(520px,90svh,940px);background:#15110e;
+ }
+ .macro-shot,.finish-shot { position:absolute;inset:0 }
+ .macro-shot { z-index:1;opacity:0 }
+ .finish-shot { z-index:2;background:#110e0b }
+ .finish-shot img {
+  position:absolute;inset:0 0 0 auto;width:76%;height:100%;object-fit:cover;object-position:60% 36%;
+  mask-image:linear-gradient(90deg,transparent 0%,#000 33%);
+ }
+ .finish-shot::after {
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(90deg,#0b0a09 0%,#0b0a0940 43%,transparent 66%);
+ }
+ .scene::after {
+  content:"";position:absolute;inset:0;pointer-events:none;z-index:3;
+  background:linear-gradient(180deg,#0b0a09b0,transparent 24%,transparent 55%,var(--black)),
+             radial-gradient(ellipse at 55% 38%,transparent 28%,#0b0a0950 82%);
+ }
+ .scalp { position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:52% 58%;transform:scale(1.07) }
+ .clipper {
+  position:absolute;z-index:1;top:0;left:38%;width:clamp(410px,66vw,1130px);
+  aspect-ratio:3/2;transform:translate3d(-33%,3%,0) rotate(-7deg);
+  filter:drop-shadow(-9px 28px 24px #0009);
+ }
+ .clipper img { display:block;width:100%;height:100%;object-fit:contain }
+ .fragments { position:absolute;inset:0;pointer-events:none }
+ .strand {
+  position:absolute;left:var(--x);top:var(--y);width:var(--size);height:5px;opacity:0;
+  border-top:1px solid #c49a62;border-radius:100% 75% 0 0;
+ }
+ .scene.playing .macro-shot { animation:macro-cut var(--duration) linear both }
+ .scene.playing .finish-shot { animation:finished-cut var(--duration) ease both }
+ .scene.playing .finish-shot img { animation:portrait-settle var(--duration) ease-out both }
+ .scene.playing .scalp { animation:camera-push var(--duration) cubic-bezier(.2,.55,.32,1) both }
+ .scene.playing .clipper { animation:clipper-pass var(--duration) cubic-bezier(.25,.6,.29,1) both }
+ .scene.playing .strand { animation:strand-away .8s var(--delay) ease-out both }
+ .scene.playing .title { animation:title-arrival var(--duration) ease both }
+ .scene.paused * { animation-play-state:paused !important }
+ .brand {
+  position:absolute;z-index:4;top:24px;left:clamp(24px,5vw,80px);
+  font:600 clamp(20px,3vw,30px)/1 'Barlow Condensed',sans-serif;letter-spacing:.12em;
+ }
+ .title {
+  position:relative;z-index:4;justify-self:start;text-align:left;
+  margin:0 clamp(24px,8vw,135px) clamp(36px,10vh,120px);
+  text-shadow:0 5px 28px #0009;
+ }
+ h1 {
+  margin:0;font:700 clamp(62px,10vw,150px)/.82 'Barlow Condensed',sans-serif;
+  text-transform:uppercase;letter-spacing:.01em;
+ }
+ .controls { display:flex;gap:12px;justify-content:center;padding:10px 16px 32px }
+ .controls button {
+  border:1px solid #b58a57;border-radius:24px;padding:9px 20px;
+  font:600 14px Barlow,sans-serif;color:var(--gold);background:#18120e;cursor:pointer;
+ }
+ .controls button:hover { background:#342318 }
+ .controls button:focus-visible { outline:2px solid var(--gold);outline-offset:4px }
+ .controls button:disabled { opacity:.45;cursor:default }
+ @keyframes macro-cut {
+  0%,50% { opacity:1 }
+  60%,100% { opacity:0 }
+ }
+ @keyframes finished-cut {
+  0%,53% { opacity:0 }
+  66%,100% { opacity:1 }
+ }
+ @keyframes portrait-settle {
+  0%,54% { transform:scale(1.09) }
+  100% { transform:scale(1) }
+ }
+ @keyframes camera-push {
+  from { transform:scale(1.01) translateX(1%) }
+  to { transform:scale(1.11) translateX(0) }
+ }
+ @keyframes clipper-pass {
+  0% { opacity:0;transform:translate3d(49%,12%,0) rotate(5deg) }
+  16% { opacity:1;transform:translate3d(15%,8%,0) rotate(1deg) }
+  42% { opacity:1;transform:translate3d(-20%,-3%,0) rotate(-6deg) }
+  58%,100% { opacity:1;transform:translate3d(-46%,-10%,0) rotate(-10deg) }
+ }
+ @keyframes strand-away {
+  0% { opacity:0;transform:translate(0,0) rotate(24deg) }
+  20% { opacity:.8 }
+  100% { opacity:0;transform:translate(var(--dx),var(--dy)) rotate(120deg) }
+ }
+ @keyframes title-arrival {
+  0%,64% { opacity:0;transform:translateY(14px) }
+  82%,100% { opacity:1;transform:none }
+ }
+ @media(max-width:650px) {
+  .scene { height:80svh;min-height:480px }
+  .clipper { top:15%;left:32%;width:clamp(345px,95vw,540px) }
+  .scalp { object-position:44% 59% }
+  .finish-shot img { width:100%;object-position:58% center;mask-image:none }
+  .finish-shot::after { background:linear-gradient(0deg,#0b0a09 0%,transparent 65%) }
+  .title { margin-inline:24px }
+ }
+</style>
+</head>
+<body>
+<main>
+ <section class="scene" id="escena" aria-labelledby="titulo">
+  <div class="macro-shot" aria-hidden="true">
+  <img class="scalp" src="./intro-corte-cabello.svg" alt="" fetchpriority="high">
+  <div class="clipper" aria-hidden="true">
+   <img src="./intro-corte-maquina.svg" alt="" fetchpriority="high">
+   <div class="fragments">
+    <i class="strand" style="--x:20%;--y:73%;--size:13px;--dx:-39px;--dy:-40px;--delay:1.45s"></i>
+    <i class="strand" style="--x:23%;--y:76%;--size:18px;--dx:-54px;--dy:-58px;--delay:1.64s"></i>
+    <i class="strand" style="--x:26%;--y:77%;--size:11px;--dx:-17px;--dy:-55px;--delay:1.95s"></i>
+    <i class="strand" style="--x:19%;--y:72%;--size:15px;--dx:-41px;--dy:-32px;--delay:2.24s"></i>
+    <i class="strand" style="--x:27%;--y:78%;--size:12px;--dx:-31px;--dy:-48px;--delay:2.6s"></i>
+   </div>
+  </div>
+  </div>
+  <div class="finish-shot">
+   <img src="./servicio-corte.svg" alt="Resultado del corte, un degradado con textura visto en tres cuartos" fetchpriority="low">
+  </div>
+  <span class="brand">BARBER SHOP</span>
+  <div class="title"><h1 id="titulo">Elige tu<br>corte</h1></div>
+ </section>
+ <div class="controls">
+  <button type="button" id="pausa" disabled>Pausar</button>
+  <button type="button" id="repetir" disabled>Repetir escena</button>
+ </div>
+</main>
+<script>
+ const scene = document.querySelector('#escena');
+ const pause = document.querySelector('#pausa');
+ const replay = document.querySelector('#repetir');
+ const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+
+ function play() {
+  scene.classList.remove('playing','paused');
+  void scene.offsetWidth;
+  scene.classList.add('playing');
+  pause.disabled = false;
+  pause.textContent = 'Pausar';
+ }
+
+ pause.addEventListener('click', () => {
+  const paused = scene.classList.toggle('paused');
+  pause.textContent = paused ? 'Reanudar' : 'Pausar';
+ });
+ replay.addEventListener('click',play);
+ scene.querySelector('.title').addEventListener('animationend', () => { pause.disabled = true; });
+
+ Promise.allSettled(Array.from(scene.querySelectorAll('img'), image => image.decode())).then(() => {
+  replay.disabled = false;
+  if (!reducedMotion.matches) play();
+ });
+</script>
+</body>
+</html>
