@@ -271,7 +271,7 @@ h1{top:12.5%;font-size:clamp(80px,14.3vw,220px);font-weight:600;letter-spacing:.
  background:#14110e;color:#f3dec0;color-scheme:dark;font:clamp(16px,1.25vw,21px) var(--font-text);
 }
 .booking-panel :is(select,input,textarea):focus-visible{outline:2px solid var(--booking-gold);outline-offset:2px}
-.booking-calendar{margin:0;min-width:0;padding:11px 12px;border:1px solid var(--booking-line);border-radius:10px;background:#161310}
+.booking-calendar{width:min(100%,300px);justify-self:center;margin:0;min-width:0;padding:8px 9px;border:1px solid var(--booking-line);border-radius:10px;background:#161310}
 .booking-calendar legend{padding:0 6px}
 .booking-calendar-nav{
  display:grid;grid-template-columns:38px 1fr 38px;align-items:center;text-align:center;
@@ -324,10 +324,10 @@ h1{top:12.5%;font-size:clamp(80px,14.3vw,220px);font-weight:600;letter-spacing:.
 }
 
 @media(min-width:761px){
- .booking-calendar{width:min(100%,340px);justify-self:center;padding:6px 9px}
+ .booking-calendar{width:min(100%,280px);padding:5px 8px}
  .booking-calendar-nav{grid-template-columns:30px 1fr 30px;margin-bottom:3px;padding-bottom:3px}
- .booking-calendar-nav strong{font-size:21px}
- .booking-calendar button{min-height:28px}
+ .booking-calendar-nav strong{font-size:19px}
+ .booking-calendar button{min-height:25px}
  .booking-calendar-grid button{font-size:15px}
  .booking-calendar legend{font-size:21px}
  .booking-calendar-grid{gap:2px}
