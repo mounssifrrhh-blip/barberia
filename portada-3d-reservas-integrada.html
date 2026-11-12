@@ -332,6 +332,16 @@ h1{top:12.5%;font-size:clamp(80px,14.3vw,220px);font-weight:600;letter-spacing:.
  .booking-calendar legend{font-size:21px}
  .booking-calendar-grid{gap:2px}
 }
+@media(min-width:761px){
+ .booking-wrap{width:min(90%,1080px);gap:clamp(20px,3vw,45px)}
+ .booking-scene{width:min(100%,1160px)}
+ .booking-heading h2{font-size:clamp(42px,4.7vw,68px)}
+ .booking-panel{padding:clamp(17px,1.85vw,26px)}
+ .booking-panel form{gap:13px}
+ .booking-field label,.booking-review label{font-size:clamp(19px,1.45vw,23px)}
+ .booking-panel :is(select,input){min-height:41px;font-size:clamp(16px,1.08vw,18px)}
+ .booking-primary{min-height:47px;font-size:clamp(19px,1.45vw,24px)}
+}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}</script>
 <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js" crossorigin>
