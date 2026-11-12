@@ -231,12 +231,10 @@ h1{top:12.5%;font-size:clamp(80px,14.3vw,220px);font-weight:600;letter-spacing:.
  position:relative;isolation:isolate;overflow:hidden;
  padding:clamp(22px,3vw,43px) 0 clamp(46px,6vw,84px);
 }
-.booking-scene{
- position:absolute;top:0;left:50%;transform:translateX(-50%);
- width:min(100%,1360px);height:auto;z-index:-1;
- mask-image:linear-gradient(180deg,transparent,#000 15%,#000 79%,transparent),
-            linear-gradient(90deg,transparent,#000 13%,#000 55%,transparent 86%);
- mask-composite:intersect;
+.booking-clipper{
+ display:block;width:min(96%,430px);height:auto;margin:14px auto 0;
+ filter:drop-shadow(10px 15px 10px #0009);
+ mask-image:linear-gradient(#000 95%,transparent);
 }
 .booking-wrap{
  width:min(90%,1260px);margin-inline:auto;display:grid;
@@ -250,8 +248,8 @@ h1{top:12.5%;font-size:clamp(80px,14.3vw,220px);font-weight:600;letter-spacing:.
 .booking-panel{
  position:relative;isolation:isolate;padding:clamp(17px,2.2vw,32px);
  border:1px solid #e7ba75;border-radius:19px;
- background:linear-gradient(144deg,#24201a,#13110f 76%);
- box-shadow:inset 0 1px 1px #ffdc9b80,0 23px 42px #0009,12px 13px 0 -1px #352410,13px 14px 0 -1px #9d7139;
+ background:transparent;
+ box-shadow:0 10px 28px #0005;
 }
 .booking-panel form{display:grid;gap:clamp(12px,1.45vw,23px)}
 .booking-field{min-width:0;display:grid;gap:8px}
@@ -265,7 +263,7 @@ h1{top:12.5%;font-size:clamp(80px,14.3vw,220px);font-weight:600;letter-spacing:.
  background:#14110e;color:#f3dec0;color-scheme:dark;font:clamp(16px,1.25vw,21px) var(--font-text);
 }
 .booking-panel :is(select,input,textarea):focus-visible{outline:2px solid var(--booking-gold);outline-offset:2px}
-.booking-calendar{width:min(100%,270px);justify-self:center;margin:0;min-width:0;padding:8px 9px;border:1px solid var(--booking-line);border-radius:10px;background:#161310}
+.booking-calendar{width:min(100%,270px);justify-self:center;margin:0;min-width:0;padding:8px 9px;border:1px solid var(--booking-line);border-radius:10px;background:transparent}
 .booking-calendar legend{padding:0 6px}
 .booking-calendar-nav{
  display:grid;grid-template-columns:38px 1fr 38px;align-items:center;text-align:center;
@@ -305,12 +303,9 @@ h1{top:12.5%;font-size:clamp(80px,14.3vw,220px);font-weight:600;letter-spacing:.
 @media(max-width:760px){
  #reservar{padding:0 0 34px}
  .booking-wrap{grid-template-columns:1fr;gap:16px}
- .booking-heading{min-height:clamp(270px,59vw,410px);padding-top:26px}
+ .booking-heading{padding-top:26px}
  .booking-heading h2{font-size:clamp(45px,9vw,78px)}
- .booking-scene{width:100%;height:clamp(275px,59vw,415px);object-fit:cover;object-position:13% center;
-  mask-image:linear-gradient(transparent,#000 18%,#000 72%,transparent),
-             linear-gradient(90deg,transparent,#000 10%,#000 82%,transparent)}
- .booking-panel{margin-right:6px;box-shadow:inset 0 1px 1px #ffdc9b80,0 18px 36px #0009,6px 8px 0 -1px #8e6637}
+ .booking-clipper{width:min(75%,280px);margin-top:12px}
 }
 @media(max-width:420px){
  .booking-calendar{padding:8px}
@@ -328,7 +323,6 @@ h1{top:12.5%;font-size:clamp(80px,14.3vw,220px);font-weight:600;letter-spacing:.
 }
 @media(min-width:761px){
  .booking-wrap{width:min(90%,1080px);gap:clamp(20px,3vw,45px)}
- .booking-scene{width:min(100%,1160px)}
  .booking-heading h2{font-size:clamp(42px,4.7vw,68px)}
  .booking-panel{padding:clamp(17px,1.85vw,26px)}
  .booking-panel form{gap:13px}
@@ -395,10 +389,13 @@ h1{top:12.5%;font-size:clamp(80px,14.3vw,220px);font-weight:600;letter-spacing:.
  </div>
 </section>
 <section id="reservar" aria-labelledby="booking-title">
- <img class="booking-scene" src="./reserva-escena-humo.svg" alt="" width="1672" height="941" loading="lazy" decoding="async">
  <div class="booking-wrap">
   <div class="booking-heading">
    <h2 id="booking-title">Solicita tu cita</h2>
+   <svg class="booking-clipper" viewBox="175 145 700 796" aria-hidden="true">
+    <defs><clipPath id="booking-clipper-outline"><path d="M187 941 Q202 907 219 883 Q227 852 259 808 Q247 800 243 785 Q239 766 259 736 C311 647 368 560 404 503 Q417 480 441 454 C470 398 506 332 559 280 Q587 252 625 241 L642 218 Q644 184 660 158 Q665 152 671 156 L653 192 L658 194 L671.0 156.0 q2 -2 3 1 l-15 36 l5 2 L679.8 159.8 q2 -2 3 1 l-15 36 l5 2 L688.6 163.6 q2 -2 3 1 l-15 36 l5 2 L697.4 167.5 q2 -2 3 1 l-15 36 l5 2 L706.2 171.3 q2 -2 3 1 l-15 36 l5 2 L715.0 175.1 q2 -2 3 1 l-15 36 l5 2 L723.8 178.9 q2 -2 3 1 l-15 36 l5 2 L732.6 182.7 q2 -2 3 1 l-15 36 l5 2 L741.4 186.6 q2 -2 3 1 l-15 36 l5 2 L750.2 190.4 q2 -2 3 1 l-15 36 l5 2 L759.0 194.2 q2 -2 3 1 l-15 36 l5 2 L767.8 198.0 q2 -2 3 1 l-15 36 l5 2 L776.6 201.8 q2 -2 3 1 l-15 36 l5 2 L785.4 205.7 q2 -2 3 1 l-15 36 l5 2 L794.2 209.5 q2 -2 3 1 l-15 36 l5 2 L803.0 213.3 q2 -2 3 1 l-15 36 l5 2 L811.8 217.1 q2 -2 3 1 l-15 36 l5 2 L820.6 220.9 q2 -2 3 1 l-15 36 l5 2 L829.4 224.8 q2 -2 3 1 l-15 36 l5 2 L838.2 228.6 q2 -2 3 1 l-15 36 l5 2 L847.0 232.4 q2 -2 3 1 l-15 36 l5 2 L851 241 Q855 230 861 237 Q869 244 861 267 L836 324 L812 366 Q815 386 794 412 L787 422 Q797 455 778 491 L754 531 Q744 548 725 542 Q702 537 709 517 C664 570 627 609 593 644 L399 804 Q366 840 345 850 Q328 858 302 845 Q277 892 252 913 L237 941 Z"/></clipPath></defs>
+    <image href="./reserva-escena-humo.svg" width="1672" height="941" clip-path="url(#booking-clipper-outline)"/>
+   </svg>
   </div>
   <div class="booking-panel">
    <form id="booking-form">
