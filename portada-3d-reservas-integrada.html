@@ -46,37 +46,47 @@ document.head.append(chairPreload);
 body{
  --scene-lead:18svh;
  --scene-height:max(680px,100svh);
- background:
-  radial-gradient(ellipse 44% 23% at 30% 81%,#70452638,transparent),
-  radial-gradient(ellipse 56% 24% at 92% 53%,#48352a31,transparent),
-  radial-gradient(ellipse 48% 25% at 7% 46%,#4141442b,transparent),
-  linear-gradient(180deg,#0b0a09,#111010 43%,#11100f 70%,#0b0a09);
  position:relative;isolation:isolate;
+ background:#101011;
+}
+body::before,body::after{
+ content:"";position:absolute;pointer-events:none;
 }
 body::before{
- content:"";position:absolute;inset:calc(-1 * var(--scene-lead)) 0 auto;
- height:calc(var(--scene-height) + var(--scene-lead) + 110px);
- z-index:-1;pointer-events:none;
- background:url('./barber-atmosphere.svg') center bottom / cover no-repeat;
- background-size:auto calc(var(--scene-height) + var(--scene-lead));
- background-position:center top;
- mask-image:linear-gradient(#000 0 67%,#000e 78%,transparent);
+ inset:0;z-index:-2;
+ background:
+  linear-gradient(90deg,#11111336 0%,#1010110a 36%,#10101196 71%,#10101155 100%),
+  linear-gradient(180deg,#10101100 52%,#10101170 83%,#101011 100%),
+  url('./barber-atmosphere.svg') 58% top / 100% 175% no-repeat;
+ opacity:.74;
 }
-@media(min-aspect-ratio: 3/2){
- body::before{background-size:max(100%,calc((var(--scene-height) + var(--scene-lead)) * 1.8)) auto}
+body::after{
+ inset:calc(-1 * var(--scene-lead)) 0 auto;
+ height:calc(var(--scene-height) + var(--scene-lead) + 240px);
+ z-index:-1;
+ background:url('./barber-atmosphere.svg') center top / max(100%,calc((var(--scene-height) + var(--scene-lead)) * 1.6)) auto no-repeat;
+ mask-image:linear-gradient(#000 0 73%,#000f 81%,transparent 98%);
 }
 @media(max-width:650px){
- body{
-  --scene-lead:38svh;
-  background:
-   radial-gradient(ellipse 64% 11% at 44% 70%,#70452624,transparent),
-   radial-gradient(ellipse 68% 21% at 5% 49%,#41414422,transparent),
-   linear-gradient(180deg,#0b0a09,#111010 49%,#100e0d 74%,#0b0a09);
+ body{--scene-lead:38svh}
+ body::before{
+  background-position:center,center,55% top;
+  background-size:auto,auto,175% 175%;
+  opacity:.55;
  }
- body::before{background-position:52% top}
+ body::after{background-position:52% top}
 }
+footer{border-top:0}
 .barber-hero{height:100svh;min-height:680px;background:transparent}
 .barber-hero::after{display:none}
+#reservar .booking-heading{position:relative;isolation:isolate}
+#reservar .booking-heading::before{
+ content:"";position:absolute;inset:5% -10% -5%;z-index:-1;pointer-events:none;
+ background:radial-gradient(ellipse at 45% 57%,#a5632938,transparent 65%);
+}
+@media(max-width:650px){
+ #reservar .booking-heading::before{inset:8% 0 0;opacity:.65}
+}
 header{padding-top:20px}
 .eyebrow{top:68px;font-size:8px;opacity:.65}
 h1{top:12.5%;font-size:clamp(80px,14.3vw,220px);font-weight:600;letter-spacing:.025em;transform:scale(.94,1.07);transform-origin:50% 0;z-index:1}
