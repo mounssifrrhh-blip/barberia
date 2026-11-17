@@ -419,6 +419,10 @@ header nav{gap:clamp(12px,2.3vw,35px)}
 .review-rating{display:flex;align-items:center;gap:7px;color:#e2cdb1;font-size:12px;white-space:nowrap}
 .review-card blockquote{grid-column:1/-1;margin:0;font-size:15px}
 @media(max-width:390px){.review-rating .visit-stars{display:none}}
+.legal-notices{max-width:900px;margin-top:16px;display:grid;gap:5px}
+.legal-notices summary{width:fit-content;min-height:32px;padding:7px 0;color:#f3cb90;cursor:pointer;font-size:13px}
+.legal-notices details p{margin:0 0 8px;max-width:72ch}
+.visit-map[hidden],#load-visit-map[hidden]{display:none}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}</script>
 <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js" crossorigin>
@@ -535,7 +539,8 @@ header nav{gap:clamp(12px,2.3vw,35px)}
    <strong>Puerta del Sol</strong>
    <p>Madrid, España</p>
   </address>
-  <iframe class="visit-map" title="Mapa interactivo de Puerta del Sol, Madrid" loading="lazy" src="https://www.openstreetmap.org/export/embed.html?bbox=-3.7095%2C40.4134%2C-3.6975%2C40.4204&amp;layer=mapnik&amp;marker=40.416878%2C-3.703517"></iframe>
+  <button type="button" class="booking-copy visit-map-link" id="load-visit-map">Cargar mapa externo</button>
+  <iframe class="visit-map" id="visit-map" hidden title="Mapa interactivo de Puerta del Sol, Madrid" loading="lazy" data-src="https://www.openstreetmap.org/export/embed.html?bbox=-3.7095%2C40.4134%2C-3.6975%2C40.4204&amp;layer=mapnik&amp;marker=40.416878%2C-3.703517"></iframe>
   <a class="visit-map-link" href="https://www.openstreetmap.org/?mlat=40.416878&amp;mlon=-3.703517#map=17/40.416878/-3.703517" target="_blank" rel="noopener noreferrer">Abrir mapa</a>
  </section>
  <section class="visit-detail" id="resenas" aria-labelledby="visit-reviews-title">
@@ -567,7 +572,30 @@ header nav{gap:clamp(12px,2.3vw,35px)}
  </section>
 </div>
 </main>
-<footer><p class="preview-label">Vista previa · Carta de servicios · Reserva de demostración</p><p>Sillón “Barber Chair” de Tyron / OmTy, <a href="https://www.fab.com/listings/800136ce-e601-49b4-87a1-ada6f8a3bc51">modelo original</a>, licencia <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. Cambios: texturas a 1024 px, asiento, respaldo, brazos y reposapiés del modelo original. Base hidráulica de la imagen validada, integrada como una pieza visual fija bajo el sillón 3D. Fondo y herramientas: imágenes generadas con acabado fotorrealista, recortadas sobre fondo transparente y animadas automáticamente. La página principal no se ha editado.</p></footer>
+<footer><p class="preview-label">Vista previa · Carta de servicios · Reserva de demostración</p><p>Sillón “Barber Chair” de Tyron / OmTy, <a href="https://www.fab.com/listings/800136ce-e601-49b4-87a1-ada6f8a3bc51">modelo original</a>, licencia <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. Cambios: texturas a 1024 px, asiento, respaldo, brazos y reposapiés del modelo original. Base hidráulica de la imagen validada, integrada como una pieza visual fija bajo el sillón 3D. Fondo y herramientas: imágenes generadas con acabado fotorrealista, recortadas sobre fondo transparente y animadas automáticamente. La página principal no se ha editado.</p><section class="legal-notices" id="legal" aria-label="Información legal">
+ <details id="aviso-legal"><summary>Aviso legal</summary>
+  <p>BARBER SHOP es una demostración de una web para barberías. La ubicación es orientativa y las reseñas son ficticias.</p>
+  <p>Antes de publicar la web comercial se incorporarán la identidad del titular, su NIF, domicilio y datos de contacto, así como los datos registrales cuando proceda.</p>
+ </details>
+ <details id="privacidad"><summary>Privacidad</summary>
+  <p>El formulario prepara el texto de una solicitud en tu navegador y permite copiarlo al portapapeles. La demostración no envía el formulario a la barbería ni confirma citas.</p>
+  <p>La página carga tipografías de Google Fonts y recursos 3D de jsDelivr. La versión comercial deberá identificar al responsable y explicar cómo se tratarán las solicitudes y cómo ejercer los derechos de protección de datos.</p>
+ </details>
+ <details id="cookies"><summary>Cookies y servicios externos</summary>
+  <p>El mapa de OpenStreetMap se carga al pulsar «Cargar mapa externo». Al hacerlo, tu navegador se conecta con el proveedor del mapa. También puedes abrirlo en una pestaña aparte.</p>
+  <p>La información definitiva sobre cookies y tecnologías similares se completará tras revisar los servicios de la versión comercial.</p>
+ </details>
+</section></footer>
+<script>
+const mapButton = document.querySelector("#load-visit-map");
+mapButton.addEventListener("click", () => {
+ const map = document.querySelector("#visit-map");
+ map.hidden = false;
+ map.src = map.dataset.src;
+ mapButton.hidden = true;
+ map.focus();
+}, {once:true});
+</script>
 <canvas id="page-hair" aria-hidden="true"></canvas>
 <script>
 (() => {
