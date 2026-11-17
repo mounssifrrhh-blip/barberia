@@ -365,6 +365,27 @@ h1{top:12.5%;font-size:clamp(80px,14.3vw,220px);font-weight:600;letter-spacing:.
  .booking-panel :is(select,input){min-height:41px;font-size:clamp(16px,1.08vw,18px)}
  .booking-primary{min-height:47px;font-size:clamp(19px,1.45vw,24px)}
 }
+
+/* Keep the booking form on the shared page backdrop. */
+.booking-intro{max-width:34ch;margin:14px 0 0;color:#e2cdb1;font-size:16px;line-height:1.55}
+.booking-panel{border-color:#e7ba7552;box-shadow:none}
+.booking-panel form{gap:18px}
+.booking-field label,.booking-calendar legend{font-size:20px}
+.booking-calendar{width:min(100%,338px);padding:8px 12px 12px}
+.booking-calendar button{min-height:38px}
+.booking-calendar-nav button{line-height:1}
+.booking-panel :is(select,input){min-height:44px}
+.booking-demo{color:#e2cdb1}
+@media(max-width:760px){
+ .booking-wrap{gap:20px}
+ .booking-heading{display:grid;grid-template-columns:minmax(0,1fr) minmax(72px,26%);column-gap:10px;align-items:center}
+ .booking-heading h2{font-size:clamp(32px,8vw,56px);align-self:end}
+ .booking-intro{grid-column:1;margin:9px 0 0;font-size:14px;align-self:start}
+ .booking-clipper{grid-column:2;grid-row:1 / span 2;width:100%;max-width:120px;margin:0}
+ .booking-panel{padding:14px}
+ .booking-calendar{padding-inline:6px}
+ .booking-calendar button{min-height:40px}
+}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}</script>
 <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js" crossorigin>
@@ -427,6 +448,7 @@ h1{top:12.5%;font-size:clamp(80px,14.3vw,220px);font-weight:600;letter-spacing:.
  <div class="booking-wrap">
   <div class="booking-heading">
    <h2 id="booking-title">Solicita tu cita</h2>
+   <p class="booking-intro">Elige el servicio, la fecha y la hora que prefieras.</p>
    <svg class="booking-clipper" viewBox="175 145 700 796" aria-hidden="true">
     <defs><clipPath id="booking-clipper-outline"><path d="M187 941 Q202 907 219 883 Q227 852 259 808 Q247 800 243 785 Q239 766 259 736 C311 647 368 560 404 503 Q417 480 441 454 C470 398 506 332 559 280 Q587 252 625 241 L642 218 Q644 184 660 158 Q665 152 671 156 L653 192 L658 194 L671.0 156.0 q2 -2 3 1 l-15 36 l5 2 L679.8 159.8 q2 -2 3 1 l-15 36 l5 2 L688.6 163.6 q2 -2 3 1 l-15 36 l5 2 L697.4 167.5 q2 -2 3 1 l-15 36 l5 2 L706.2 171.3 q2 -2 3 1 l-15 36 l5 2 L715.0 175.1 q2 -2 3 1 l-15 36 l5 2 L723.8 178.9 q2 -2 3 1 l-15 36 l5 2 L732.6 182.7 q2 -2 3 1 l-15 36 l5 2 L741.4 186.6 q2 -2 3 1 l-15 36 l5 2 L750.2 190.4 q2 -2 3 1 l-15 36 l5 2 L759.0 194.2 q2 -2 3 1 l-15 36 l5 2 L767.8 198.0 q2 -2 3 1 l-15 36 l5 2 L776.6 201.8 q2 -2 3 1 l-15 36 l5 2 L785.4 205.7 q2 -2 3 1 l-15 36 l5 2 L794.2 209.5 q2 -2 3 1 l-15 36 l5 2 L803.0 213.3 q2 -2 3 1 l-15 36 l5 2 L811.8 217.1 q2 -2 3 1 l-15 36 l5 2 L820.6 220.9 q2 -2 3 1 l-15 36 l5 2 L829.4 224.8 q2 -2 3 1 l-15 36 l5 2 L838.2 228.6 q2 -2 3 1 l-15 36 l5 2 L847.0 232.4 q2 -2 3 1 l-15 36 l5 2 L851 241 Q855 230 861 237 Q869 244 861 267 L836 324 L812 366 Q815 386 794 412 L787 422 Q797 455 778 491 L754 531 Q744 548 725 542 Q702 537 709 517 C664 570 627 609 593 644 L399 804 Q366 840 345 850 Q328 858 302 845 Q277 892 252 913 L237 941 Z"/></clipPath></defs>
     <image href="./reserva-escena-humo.svg" width="1672" height="941" clip-path="url(#booking-clipper-outline)"/>
@@ -435,7 +457,7 @@ h1{top:12.5%;font-size:clamp(80px,14.3vw,220px);font-weight:600;letter-spacing:.
   <div class="booking-panel">
    <form id="booking-form">
     <div class="booking-field">
-     <label for="booking-service">Servicio</label>
+     <label for="booking-service">1. Servicio</label>
      <select id="booking-service" required>
       <option value="" disabled selected>Elige tu servicio</option>
       <option value="corte">Corte de pelo</option>
@@ -445,7 +467,7 @@ h1{top:12.5%;font-size:clamp(80px,14.3vw,220px);font-weight:600;letter-spacing:.
      </select>
     </div>
     <fieldset class="booking-calendar" id="booking-calendar" hidden>
-     <legend>Fecha</legend>
+     <legend>2. Fecha</legend>
      <div class="booking-calendar-nav">
       <button type="button" id="booking-prev-month" aria-label="Mes anterior">‹</button>
       <strong id="booking-month" aria-live="polite"></strong>
@@ -459,7 +481,7 @@ h1{top:12.5%;font-size:clamp(80px,14.3vw,220px);font-weight:600;letter-spacing:.
      <p class="booking-date-error" id="booking-date-error" role="status"></p>
     </fieldset>
     <div class="booking-field" id="booking-date-fallback"><label for="booking-date">Fecha preferida</label><input type="date" id="booking-date" required></div>
-    <div class="booking-field"><label for="booking-time">Hora preferida</label><input type="time" id="booking-time" required></div>
+    <div class="booking-field"><label for="booking-time">3. Hora preferida</label><input type="time" id="booking-time" required></div>
     <button type="submit" class="booking-primary">Preparar mensaje de WhatsApp</button>
    </form>
    <div class="booking-review" id="booking-review" hidden>
@@ -468,7 +490,7 @@ h1{top:12.5%;font-size:clamp(80px,14.3vw,220px);font-weight:600;letter-spacing:.
     <button type="button" class="booking-copy" id="booking-copy">Copiar mensaje</button>
     <p id="booking-status" role="status"></p>
    </div>
-   <p class="booking-demo">Vista previa. Puedes preparar y copiar el mensaje sin enviar una solicitud real.</p>
+   <p class="booking-demo">Modo de prueba. Aquí puedes preparar y copiar el mensaje.</p>
   </div>
  </div>
 </section>
