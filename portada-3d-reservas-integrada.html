@@ -410,6 +410,15 @@ header nav{gap:clamp(12px,2.3vw,35px)}
 .visit-stars{color:#edc58c;letter-spacing:.1em}
 .visit-map{display:block;width:100%;height:clamp(240px,28vw,330px);margin-top:14px;border:1px solid #e7ba7536;border-radius:12px;background:#14110e}
 .visit-map-link{display:inline-flex;align-items:center;min-height:44px;margin-top:8px;color:#f3cb90;text-underline-offset:4px}
+
+.visit-reviews .review-card{padding:16px 18px;border-color:#e7ba7540;background:linear-gradient(120deg,#201914ba,#15121166)}
+.review-card figure{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px 12px;margin:0}
+.review-card figcaption{display:flex;align-items:center;gap:10px;color:#f6e0bb}
+.review-avatar{display:grid;place-items:center;flex:none;width:36px;height:36px;border:1px solid #bd8d5469;border-radius:50%;background:#ba865726;color:#f1c58a;font-size:12px}
+.review-service{display:block;margin-top:2px;color:#d7bd99;font-size:12px}
+.review-rating{display:flex;align-items:center;gap:7px;color:#e2cdb1;font-size:12px;white-space:nowrap}
+.review-card blockquote{grid-column:1/-1;margin:0;font-size:15px}
+@media(max-width:390px){.review-rating .visit-stars{display:none}}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}</script>
 <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js" crossorigin>
@@ -531,10 +540,29 @@ header nav{gap:clamp(12px,2.3vw,35px)}
  </section>
  <section class="visit-detail" id="resenas" aria-labelledby="visit-reviews-title">
   <h2 id="visit-reviews-title">Reseñas</h2>
-  <p class="visit-demo">Reseñas ficticias · Demostración</p>
+  <p class="visit-demo">Reseñas de ejemplo · Demostración</p>
   <ul class="visit-reviews">
-   <li><span class="visit-stars" role="img" aria-label="5 de 5 estrellas">★★★★★</span><blockquote>«Me quedó el degradado justo como lo pedí. La cita empezó puntual.»</blockquote></li>
-   <li><span class="visit-stars" role="img" aria-label="5 de 5 estrellas">★★★★★</span><blockquote>«Reservé corte y barba. Me gustó que me preguntaran cuánto quería rebajar antes de empezar.»</blockquote></li>
+   <li class="review-card">
+    <figure>
+     <figcaption><span class="review-avatar" aria-hidden="true">AM</span><span><strong>Álex M.</strong><span class="review-service">Corte de pelo</span></span></figcaption>
+     <div class="review-rating"><span class="visit-stars" aria-hidden="true">★★★★★</span><span aria-label="5 de 5 estrellas">5/5</span></div>
+     <blockquote>«Pedí un degradado bajo y que me dejaran largo arriba. Me enseñaron cómo iba quedando antes de repasar los laterales.»</blockquote>
+    </figure>
+   </li>
+   <li class="review-card">
+    <figure>
+     <figcaption><span class="review-avatar" aria-hidden="true">DR</span><span><strong>Dani R.</strong><span class="review-service">Corte y barba</span></span></figcaption>
+     <div class="review-rating"><span class="visit-stars" aria-hidden="true">★★★★★</span><span aria-label="5 de 5 estrellas">5/5</span></div>
+     <blockquote>«Me perfilaron la barba sin quitarme el largo. La cita empezó a la hora y salí listo para el trabajo.»</blockquote>
+    </figure>
+   </li>
+   <li class="review-card">
+    <figure>
+     <figcaption><span class="review-avatar" aria-hidden="true">ML</span><span><strong>Mario L.</strong><span class="review-service">Arreglo de barba</span></span></figcaption>
+     <div class="review-rating"><span class="visit-stars" aria-hidden="true">★★★★☆</span><span aria-label="4 de 5 estrellas">4/5</span></div>
+     <blockquote>«Quería limpiar el cuello y dejar las mejillas naturales. El resultado quedó como esperaba. Tuve que esperar unos minutos.»</blockquote>
+    </figure>
+   </li>
   </ul>
  </section>
 </div>
