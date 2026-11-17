@@ -43,13 +43,38 @@ document.head.append(chairPreload);
 
 .extra{aspect-ratio:0.7814407814407814}
 /* Wider editorial framing; title stays behind the WebGL chair. */
-body{background:#0b0a09;isolation:isolate}
-body::before{
- content:"";position:fixed;inset:-18svh 0 0;z-index:-1;pointer-events:none;
- background:linear-gradient(180deg,#08090a26,transparent 56%,#0b0a0933),
-            url('./barber-atmosphere.svg') center bottom / cover no-repeat;
+body{
+ --scene-lead:18svh;
+ --scene-height:max(680px,100svh);
+ background:
+  radial-gradient(ellipse 44% 23% at 30% 81%,#70452638,transparent),
+  radial-gradient(ellipse 56% 24% at 92% 53%,#48352a31,transparent),
+  radial-gradient(ellipse 48% 25% at 7% 46%,#4141442b,transparent),
+  linear-gradient(180deg,#0b0a09,#111010 43%,#11100f 70%,#0b0a09);
+ position:relative;isolation:isolate;
 }
-@media(max-width:650px){body::before{top:-38svh;background-position:center,52% bottom}}
+body::before{
+ content:"";position:absolute;inset:calc(-1 * var(--scene-lead)) 0 auto;
+ height:calc(var(--scene-height) + var(--scene-lead) + 110px);
+ z-index:-1;pointer-events:none;
+ background:url('./barber-atmosphere.svg') center bottom / cover no-repeat;
+ background-size:auto calc(var(--scene-height) + var(--scene-lead));
+ background-position:center top;
+ mask-image:linear-gradient(#000 0 67%,#000e 78%,transparent);
+}
+@media(min-aspect-ratio: 3/2){
+ body::before{background-size:max(100%,calc((var(--scene-height) + var(--scene-lead)) * 1.8)) auto}
+}
+@media(max-width:650px){
+ body{
+  --scene-lead:38svh;
+  background:
+   radial-gradient(ellipse 64% 11% at 44% 70%,#70452624,transparent),
+   radial-gradient(ellipse 68% 21% at 5% 49%,#41414422,transparent),
+   linear-gradient(180deg,#0b0a09,#111010 49%,#100e0d 74%,#0b0a09);
+ }
+ body::before{background-position:52% top}
+}
 .barber-hero{height:100svh;min-height:680px;background:transparent}
 .barber-hero::after{display:none}
 header{padding-top:20px}
