@@ -398,6 +398,16 @@ header nav{gap:clamp(12px,2.3vw,35px)}
  .eyebrow{top:77px}
  .visit-details{grid-template-columns:1fr}
 }
+
+.visit-detail h2{margin-bottom:8px}
+.visit-detail .visit-demo{margin-bottom:18px;color:#e5b979;font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+.visit-address,.visit-reviews li{border:1px solid #e7ba7536;border-radius:12px;background:#14110e72;padding:18px}
+.visit-address{font-style:normal}
+.visit-address strong{color:#f6e0bb;font-size:18px}
+.visit-address p{margin-top:5px}
+.visit-reviews{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+.visit-reviews blockquote{margin:5px 0 0;color:#f6e0bb;font-size:16px;line-height:1.55}
+.visit-stars{color:#edc58c;letter-spacing:.1em}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}</script>
 <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js" crossorigin>
@@ -509,11 +519,19 @@ header nav{gap:clamp(12px,2.3vw,35px)}
 <div class="visit-details">
  <section class="visit-detail" id="ubicacion" aria-labelledby="visit-location-title">
   <h2 id="visit-location-title">Ubicación</h2>
-  <p>La dirección y el enlace para llegar se publicarán aquí.</p>
+  <p class="visit-demo">Ubicación ficticia · Demostración</p>
+  <address class="visit-address">
+   <strong>Barber Shop</strong>
+   <p>Calle de la Barbería, 10<br>Madrid, España</p>
+  </address>
  </section>
  <section class="visit-detail" id="resenas" aria-labelledby="visit-reviews-title">
   <h2 id="visit-reviews-title">Reseñas</h2>
-  <p>Las opiniones de los clientes se publicarán aquí.</p>
+  <p class="visit-demo">Reseñas ficticias · Demostración</p>
+  <ul class="visit-reviews">
+   <li><span class="visit-stars" role="img" aria-label="5 de 5 estrellas">★★★★★</span><blockquote>«Me quedó el degradado justo como lo pedí. La cita empezó puntual.»</blockquote></li>
+   <li><span class="visit-stars" role="img" aria-label="5 de 5 estrellas">★★★★★</span><blockquote>«Reservé corte y barba. Me gustó que me preguntaran cuánto quería rebajar antes de empezar.»</blockquote></li>
+  </ul>
  </section>
 </div>
 </main>
