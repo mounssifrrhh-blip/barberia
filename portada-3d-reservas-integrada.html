@@ -408,6 +408,8 @@ header nav{gap:clamp(12px,2.3vw,35px)}
 .visit-reviews{list-style:none;padding:0;margin:0;display:grid;gap:10px}
 .visit-reviews blockquote{margin:5px 0 0;color:#f6e0bb;font-size:16px;line-height:1.55}
 .visit-stars{color:#edc58c;letter-spacing:.1em}
+.visit-map{display:block;width:100%;height:clamp(240px,28vw,330px);margin-top:14px;border:1px solid #e7ba7536;border-radius:12px;background:#14110e}
+.visit-map-link{display:inline-flex;align-items:center;min-height:44px;margin-top:8px;color:#f3cb90;text-underline-offset:4px}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}</script>
 <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js" crossorigin>
@@ -519,11 +521,13 @@ header nav{gap:clamp(12px,2.3vw,35px)}
 <div class="visit-details">
  <section class="visit-detail" id="ubicacion" aria-labelledby="visit-location-title">
   <h2 id="visit-location-title">Ubicación</h2>
-  <p class="visit-demo">Ubicación ficticia · Demostración</p>
+  <p class="visit-demo">Ubicación de ejemplo · Demostración</p>
   <address class="visit-address">
-   <strong>Barber Shop</strong>
-   <p>Calle de la Barbería, 10<br>Madrid, España</p>
+   <strong>Puerta del Sol</strong>
+   <p>Madrid, España</p>
   </address>
+  <iframe class="visit-map" title="Mapa interactivo de Puerta del Sol, Madrid" loading="lazy" src="https://www.openstreetmap.org/export/embed.html?bbox=-3.7095%2C40.4134%2C-3.6975%2C40.4204&amp;layer=mapnik&amp;marker=40.416878%2C-3.703517"></iframe>
+  <a class="visit-map-link" href="https://www.openstreetmap.org/?mlat=40.416878&amp;mlon=-3.703517#map=17/40.416878/-3.703517" target="_blank" rel="noopener noreferrer">Abrir mapa</a>
  </section>
  <section class="visit-detail" id="resenas" aria-labelledby="visit-reviews-title">
   <h2 id="visit-reviews-title">Reseñas</h2>
