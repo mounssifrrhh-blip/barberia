@@ -386,11 +386,23 @@ h1{top:12.5%;font-size:clamp(80px,14.3vw,220px);font-weight:600;letter-spacing:.
  .booking-calendar{padding-inline:6px}
  .booking-calendar button{min-height:40px}
 }
+
+.visit-details{width:min(90%,1080px);margin-inline:auto;padding:clamp(45px,7vw,96px) 0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(28px,6vw,84px)}
+.visit-detail{scroll-margin-top:24px;border-top:1px solid #e7ba7552;padding-top:23px}
+.visit-detail h2{margin:0 0 18px;color:#f7dba8;font:700 clamp(34px,4.1vw,57px)/1 var(--font-heading);text-transform:uppercase}
+.visit-detail p{margin:0;color:#e2cdb1;font-size:16px;line-height:1.55}
+header nav{gap:clamp(12px,2.3vw,35px)}
+@media(max-width:650px){
+ header{flex-wrap:wrap;row-gap:7px}
+ header nav{flex-wrap:wrap;column-gap:12px;row-gap:5px}
+ .eyebrow{top:77px}
+ .visit-details{grid-template-columns:1fr}
+}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}</script>
 <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js" crossorigin>
 <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/environments/RoomEnvironment.js" crossorigin>
-<header><a class="logo" href="#inicio">BARBER SHOP</a><nav aria-label="Navegación"><a href="#inicio">Inicio</a><a href="#servicios">Servicios</a><a href="#reservar">Reservas</a></nav></header>
+<header><a class="logo" href="#inicio">BARBER SHOP</a><nav aria-label="Navegación"><a href="#inicio">Inicio</a><a href="#servicios">Servicios</a><a href="#reservar">Reservas</a><a href="#ubicacion">Ubicación</a><a href="#resenas">Reseñas</a></nav></header>
 <main id="inicio"><section class="barber-hero" aria-label="Portada"><canvas id="smoke" aria-hidden="true"></canvas><p class="eyebrow">EL DETALLE MARCA EL ESTILO</p><h1>BARBER SHOP</h1><img id="approved-base" hidden src="./base-validada.svg" alt="" aria-hidden="true" fetchpriority="high"><div id="scene" role="img" aria-hidden="true" aria-label="Sillón de barbería 3D negro con herramientas flotantes. Arrastra para girar el asiento sobre su base fija."></div><canvas class="hair-strands" id="hair-strands" aria-hidden="true"></canvas><div class="photo-tools" aria-hidden="true"><div class="floating-tool tool-scissors"><div class="tool-cutout"></div></div><div class="floating-tool tool-clipper"><div class="tool-cutout"></div></div><div class="floating-tool tool-razor extra"><div class="tool-cutout"></div></div><div class="floating-tool tool-comb extra"><div class="tool-cutout"></div></div><div class="floating-tool tool-brush"><div class="tool-cutout"></div></div><div class="floating-tool tool-thinning extra"><div class="tool-cutout"></div></div><div class="floating-tool tool-shaver"><div class="tool-cutout"></div></div></div><span class="caption">PRECISIÓN · CARÁCTER · ESTILO</span><div class="bottom"><a class="cta" href="#reservar">RESERVAR CITA</a><p class="tagline">Tu estilo empieza aquí</p><div class="controls"><button id="motion" disabled>Pausar movimiento</button><button id="reset" disabled>Centrar sillón</button><button id="smoke-toggle" aria-pressed="true">Humo: activado</button></div></div></section>
 <section id="servicios" aria-labelledby="services-title">
  <div class="services-wrap" id="carta">
@@ -494,6 +506,16 @@ h1{top:12.5%;font-size:clamp(80px,14.3vw,220px);font-weight:600;letter-spacing:.
   </div>
  </div>
 </section>
+<div class="visit-details">
+ <section class="visit-detail" id="ubicacion" aria-labelledby="visit-location-title">
+  <h2 id="visit-location-title">Ubicación</h2>
+  <p>La dirección y el enlace para llegar se publicarán aquí.</p>
+ </section>
+ <section class="visit-detail" id="resenas" aria-labelledby="visit-reviews-title">
+  <h2 id="visit-reviews-title">Reseñas</h2>
+  <p>Las opiniones de los clientes se publicarán aquí.</p>
+ </section>
+</div>
 </main>
 <footer><p class="preview-label">Vista previa · Carta de servicios · Reserva de demostración</p><p>Sillón “Barber Chair” de Tyron / OmTy, <a href="https://www.fab.com/listings/800136ce-e601-49b4-87a1-ada6f8a3bc51">modelo original</a>, licencia <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. Cambios: texturas a 1024 px, asiento, respaldo, brazos y reposapiés del modelo original. Base hidráulica de la imagen validada, integrada como una pieza visual fija bajo el sillón 3D. Fondo y herramientas: imágenes generadas con acabado fotorrealista, recortadas sobre fondo transparente y animadas automáticamente. La página principal no se ha editado.</p></footer>
 <canvas id="page-hair" aria-hidden="true"></canvas>
